@@ -4,7 +4,11 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
+# These are checked in order, so it tries to match static first then falls back to Django
 handlers:
+- url: /static
+  static_dir: static
+# Reference to the application variable in wina/wsgi.py
 - url: .*
   script: wina.wsgi.application
 
