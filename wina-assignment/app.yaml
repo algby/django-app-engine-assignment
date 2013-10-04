@@ -5,13 +5,9 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /favicon\.ico
-  static_files: favicon.ico
-  upload: favicon\.ico
+- url: .*
+  script: wina.wsgi.application
 
 libraries:
 - name: django
-  version: '1.5.4'
-
-builtins:
-- django_wsgi: on
+  version: '1.5'
