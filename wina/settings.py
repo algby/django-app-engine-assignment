@@ -1,3 +1,5 @@
+import os
+
 # Django settings for wina project.
 
 DEBUG = True
@@ -9,16 +11,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
+# Database configs, only one of those will be chosen based on the env
+database_configs = {
+    'development': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'wina',
+        'USER': 'django',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    },
+    'production': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '',
         'USER': '',
         'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'HOST': '',
+        'PORT': '',
     }
+}
+
+DATABASES = {
+    'default': database_configs['production'] if os.getenv('SERVER_SOFTWARE') and os.getenv('SERVER_SOFTWARE').startswith('Google App Engine/') else database_configs['development']
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
