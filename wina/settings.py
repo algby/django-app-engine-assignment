@@ -117,6 +117,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'wina'
+ROOT_URLCONF = 'wina.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'wina.wsgi.application'
