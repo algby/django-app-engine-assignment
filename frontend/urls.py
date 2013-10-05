@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from cms import views
+from frontend import views
 
 urlpatterns = patterns('',
     # Catch all route
