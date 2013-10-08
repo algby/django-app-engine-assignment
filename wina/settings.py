@@ -96,6 +96,12 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+# Login URL for the CMS module
+LOGIN_URL = '/cms/login/'
+
+# Where to default to sending the user after login
+LOGIN_REDIRECT_URL = '/cms/'
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'qapima$n$jh^j33n@p#ar)ivhtf2+kug3)&j=g52l08!gmim%i'
 
@@ -132,8 +138,10 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
+
+    'api',
     'cms',
+    'frontend',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

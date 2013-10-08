@@ -1,5 +1,15 @@
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as logout_user
 
-# Create your views here.
+@login_required
 def index(request):
     return HttpResponse('cms')
+
+def logout(request):
+    # Logout the user
+    logout_user(request)
+
+    # Redirect them to the home page
+    return redirect('/')
