@@ -5,7 +5,7 @@ from django.contrib.auth import logout as logout_user
 
 @login_required
 def index(request):
-    return HttpResponse('cms')
+    return HttpResponse('Welcome ' + str(request.user).capitalize())
 
 def logout(request):
     # Logout the user
