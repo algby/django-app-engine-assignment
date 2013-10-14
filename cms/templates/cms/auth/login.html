@@ -1,27 +1,28 @@
+{% extends 'cms/template.html' %}
+
+{% block header %}{% endblock header %}
+
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+<!-- Used to centre the form -->
+<div class="col-md-4"></div>
 
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="col-md-4" style="text-align: center">
 
-{% csrf_token %}
+	<!-- Display validation errors if there were any -->
+	{% if form.errors %}
+	<div class="alert alert-danger">Your username and password didn't match. Please try again.</div>
+	{% endif %}
 
-	<table>
-		<tr>
-			<td>{{ form.username.label_tag }}</td>
-			<td>{{ form.username }}</td>
-		</tr>
-		<tr>
-			<td>{{ form.password.label_tag }}</td>
-			<td>{{ form.password }}</td>
-		</tr>
-	</table>
+	<!-- For preventing cross site request forgery attacks -->
+	{% csrf_token %}
 
-	<input type="submit" value="login" />
+	<p>{{ form.username }}</p>
+	<p>{{ form.password }}</p>
+
+	<button class="btn btn-success" type="submit">Sign in</button>
 	<input type="hidden" name="next" value="{{ next }}" />
 
 </form>
 
-{% endblock %}
+{% endblock content %}
