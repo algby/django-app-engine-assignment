@@ -75,3 +75,4 @@ nosetests.xml
 *.pot
 *.pyc
 local_settings.py
+brief.pdf
