@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.logout, name='logout'),
 
     # Catch all route
-    url(r'^$', views.index, name='index')
+    url(r'^$', views.index, name='cms-home')
 )

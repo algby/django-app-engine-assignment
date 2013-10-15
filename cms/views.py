@@ -1,11 +1,12 @@
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as logout_user
 
 @login_required
 def index(request):
-    return HttpResponse('Welcome ' + str(request.user).capitalize())
+    # Render the page
+    return render(request, 'cms/index.html')
 
 def logout(request):
     # Logout the user
