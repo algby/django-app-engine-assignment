@@ -14,3 +14,18 @@ def logout(request):
 
     # Redirect them to the home page
     return redirect('/')
+
+@login_required
+def media(request):
+    # Render the page
+    return render(request, 'cms/index.html', {"title": "Media"})
+
+@login_required
+def story(request):
+    # Render the page
+    return render(request, 'cms/index.html', {"title": "Stories"})
+
+@login_required
+def user(request):
+    # Render the page
+    return render(request, 'cms/index.html', {"title": "Users"})
