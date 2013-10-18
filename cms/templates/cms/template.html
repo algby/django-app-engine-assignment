@@ -31,10 +31,24 @@
 					<li><a href="#">{{ user }}</a></li>
 					<li><a href="{% url 'logout' %}">Log Out</a></li>
 				</ul>
-			</div><!--/.nav-collapse -->
+			</div>
 		</div>
 	</div>
 	{% endblock %}
+
+	{% if messages %}
+		{% for message in messages %}
+			<div class="alert alert-{{ message.tags }}" style="margin: auto;">
+				<div class="container">{{ message }}</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+
+	<div class="jumbotron">
+		<div class="container">
+			<h1>{{ title }}</h1>
+		</div>
+	</div>
 
 	<div class="container">
 		{% block content %}{% endblock %}
