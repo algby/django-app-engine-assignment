@@ -97,10 +97,10 @@ STATICFILES_FINDERS = (
 )
 
 # Login URL for the CMS module
-LOGIN_URL = '/cms/login/'
+LOGIN_URL = '/cms/login'
 
 # Where to default to sending the user after login
-LOGIN_REDIRECT_URL = '/cms/'
+LOGIN_REDIRECT_URL = '/cms'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'qapima$n$jh^j33n@p#ar)ivhtf2+kug3)&j=g52l08!gmim%i'
@@ -113,6 +113,8 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -25,11 +25,11 @@ def logout(request):
 def media(request):
     media = Media.objects.all()
 
-    return render(request, 'cms/index.html', {'title': 'Media', 'media': media})
+    return render(request, 'cms/media/index.html', {'title': 'Media', 'media': media})
 
-# Render the manage media form or handle saving it
+# Render the add/edit media form or handle saving it
 @login_required
-def media_add(request):
+def media_add_or_edit(request, id=False):
     # Is it a POST request, i.e is the form being submitted
     if request.method == 'POST':
         # Pass the form all the HTTP POST data
@@ -41,20 +41,47 @@ def media_add(request):
             form.save()
 
             # Show a success message to the user
-            messages.success(request, 'Media succesfully added!')
+            message_suffix = 'added!' if id is False else 'edited'
+            messages.success(request, 'Media succesfully %s' % message_suffix)
 
+            # Redirect them back to the media home page
             return redirect('media-home')
 
-    # If not then just get an instance of a blank form to render
+    # If not then jget an instance of the form to render
     else:
-        form = MediaForm()
+        # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
+        if id is not False:
+            media = Media.objects.get(id=id)
+            form = MediaForm(instance=media)
+            template_data = {'form': form, 'title': media.title}
 
-    return render(request, 'cms/form.html', {'form': form, 'title': 'Add Media'})
+        # If not we must be adding new media as we have no id in the URL
+        else:
+            form = MediaForm()
+            template_data = {'form': form, 'title': 'Add Media'}
+
+        return render(request, 'cms/form.html', template_data)
 
 @login_required
-def media_edit(request, id):
+def media_view(request, id):
     media = Media.objects.get(id=id)
-    return HttpResponse('Media ID: ' + str(media.id) + ', Title: ' + media.title)
+
+    return render(request, 'cms/media/view.html', {'media': media, 'title': media.title})
+
+# Handles deleting a piece of media if the user is logged in
+@login_required
+def media_delete(request, id):
+    # Look up the media object
+    media = Media.objects.get(id=id)
+
+    # Delete it from the database
+    media.delete()
+
+    # Show a success message to the user
+    messages.success(request, 'Media succesfully deleted!')
+
+    # Redirect them back to the media home page
+    return redirect('media-home')
 
 # Render the cms story home page if the user is logged in
 @login_required

@@ -1,0 +1,21 @@
+{% extends 'cms/template.html' %}
+
+{% block content %}
+		
+	{% if media.type == 'text' %}
+
+		{{ media.content }}
+
+	{% elif media.type == 'image' %}
+
+		<img src="{{ media.content }}"/>
+
+	{% else %}
+
+		Unknown Media Type.
+
+	{% endif %}
+
+	<p>Created on {{ media.date_created }}</p>
+
+{% endblock content %}

@@ -9,8 +9,10 @@ urlpatterns = patterns('',
 
     # Media Routes
     url(r'^/media$', views.media, name='media-home'),
-    url(r'^/media/add$', views.media_add, name='media-add'),
-    url(r'^/media/view/(?P<id>\d)$', views.media_edit, name='media-edit'),
+    url(r'^/media/view/(?P<id>\d+)$', views.media_view, name='media-view'),
+    url(r'^/media/add$', views.media_add_or_edit, name='media-add'),
+    url(r'^/media/edit/(?P<id>\d+)$', views.media_add_or_edit, name='media-edit'),
+    url(r'^/media/delete/(?P<id>\d+)$', views.media_delete, name='media-delete'),
 
     # Story Routes
     url(r'^/story$', views.story, name='story-home'),
