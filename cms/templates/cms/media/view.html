@@ -2,6 +2,7 @@
 
 {% block content %}
 		
+	<p>
 	{% if media.type == 'text' %}
 
 		{{ media.content }}
@@ -10,11 +11,28 @@
 
 		<img src="{{ media.content }}"/>
 
+	{% elif media.type == 'audio' %}
+
+		<audio controls>
+			<source src="{{ media.content }}" type="audio/mpeg">
+			Your browser does not support HTML5 audio.
+		</audio>
+
+	{% elif media.type == 'video' %}
+
+		<video controls>
+			<source src="{{ media.content }}" type="video/mp4">
+			Your browser does not support HTML5 video.
+		</video>
+
 	{% else %}
 
 		Unknown Media Type.
 
 	{% endif %}
+	</p>
+
+	<p><a href="{% url 'media-edit' id=media.id %}" type="button" class="btn btn-warning">Edit</a></p>
 
 	<p>Created on {{ media.date_created }}</p>
 
