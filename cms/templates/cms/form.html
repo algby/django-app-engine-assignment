@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<form class="form-horizontal" method="post">{% csrf_token %}
+<form class="form-horizontal" method="post">
+	{% csrf_token %}
+	
 	{% for field in form %}
 		<p>
 			{% if field.errors %}
@@ -11,7 +13,7 @@
 					<div class="controls">{{ field }}
 						<span class="help-inline">
 							{% for error in field.errors %}
-								{{ error }}
+								<span class="label label-danger">{{ error }}</span>
 							{% endfor %}
 						</span>
 					</div>

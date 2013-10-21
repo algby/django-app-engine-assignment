@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as logout_user
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from api.models import Media
 from api.models import MediaForm
@@ -47,17 +48,15 @@ def media_add_or_edit(request, id=False):
             # Redirect them back to the media home page
             return redirect('media-home')
 
-    # If not then jget an instance of the form to render
-    else:
         # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
         if id is not False:
             media = Media.objects.get(id=id)
-            form = MediaForm(instance=media)
+	form = form if request.method == 'POST' else MediaForm(instance=media)
             template_data = {'form': form, 'title': media.title}
 
         # If not we must be adding new media as we have no id in the URL
         else:
-            form = MediaForm()
+	form = form if request.method == 'POST' else MediaForm()
             template_data = {'form': form, 'title': 'Add Media'}
 
         return render(request, 'cms/form.html', template_data)
