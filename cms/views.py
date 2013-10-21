@@ -11,7 +11,7 @@ from api.models import MediaForm
 # Render the CMS home page if the user is logged in
 @login_required
 def index(request):
-    return render(request, 'cms/index.html', {'title': 'Welcome'})
+    return render(request, 'cms/index.html', {'title': 'Welcome, %s' % request.user})
 
 # Log out the user and redirect to them to /
 def logout(request):
@@ -48,18 +48,18 @@ def media_add_or_edit(request, id=False):
             # Redirect them back to the media home page
             return redirect('media-home')
 
-        # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
-        if id is not False:
-            media = Media.objects.get(id=id)
-	form = form if request.method == 'POST' else MediaForm(instance=media)
-            template_data = {'form': form, 'title': media.title}
+    # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
+    if id is not False:
+        media = Media.objects.get(id=id)
+        form = form if request.method == 'POST' else MediaForm(instance=media)
+        template_data = {'form': form, 'title': media.title}
 
-        # If not we must be adding new media as we have no id in the URL
-        else:
-	form = form if request.method == 'POST' else MediaForm()
-            template_data = {'form': form, 'title': 'Add Media'}
+    # If not we must be adding new media as we have no id in the URL
+    else:
+        form = form if request.method == 'POST' else MediaForm()
+        template_data = {'form': form, 'title': 'Add Media'}
 
-        return render(request, 'cms/form.html', template_data)
+    return render(request, 'cms/form.html', template_data)
 
 @login_required
 def media_view(request, id):

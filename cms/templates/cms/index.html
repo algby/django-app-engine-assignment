@@ -2,15 +2,6 @@
 
 {% block content %}
 
-	{% if media %}
-		<ul>
-			{% for media_object in media %}
-			<li><a href="/cms/media/view/{{ media_object.id }}">{{ media_object.title }}</a></li>
-			{% endfor %}
-		</ul>
-
-	{% else %}
-		<p>No media available.</p>
-	{% endif %}
+	
 
 {% endblock content %}
