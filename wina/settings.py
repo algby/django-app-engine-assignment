@@ -22,17 +22,14 @@ database_configs = {
         'PORT': '3306',
     },
     'production': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'google.appengine.ext.django.backends.rdbms',
+        'INSTANCE': 'wina-assignment:db',
+        'NAME': 'wina',
     }
 }
 
 DATABASES = {
-    'default': database_configs['production'] if os.getenv('SERVER_SOFTWARE') and os.getenv('SERVER_SOFTWARE').startswith('Google App Engine/') else database_configs['development']
+    'default': database_configs['production'] if os.getenv('SERVER_SOFTWARE') and os.getenv('SERVER_SOFTWARE').startswith('Google App Engine/') or os.getenv('DJANGO_ENV') == 'production' else database_configs['development']
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
