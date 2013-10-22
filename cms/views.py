@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 from api.models import Media
 from api.models import MediaForm
 
+from modules import cloudstorage as gcs
+
 # Render the CMS home page if the user is logged in
 @login_required
 def index(request):
@@ -34,7 +36,7 @@ def media_add_or_edit(request, id=False):
     # Is it a POST request, i.e is the form being submitted
     if request.method == 'POST':
         # Pass the form all the HTTP POST data
-        form = MediaForm(request.POST)
+        form = MediaForm(request.POST, request.FILES)
 
         # Run through any validation rules we have
         if form.is_valid():

@@ -20,10 +20,10 @@ database_configs = {
         'PASSWORD': 'password',
     },
     'production': {
-	'ENGINE': 'django.db.backends.mysql',
-	'HOST': '/cloudsql/wina-assignment:db',
-	'NAME': 'wina',
-	'USER': 'root',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '/cloudsql/wina-assignment:db',
+        'NAME': 'wina',
+        'USER': 'root',
     },
     'prod_data_sync': {
         'ENGINE': 'google.appengine.ext.django.backends.rdbms',
@@ -95,6 +95,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+# File uploads
+FILE_UPLOAD_HANDLERS = (
+    'modules.django_gcs_upload_handler.GoogleCloudStorageUploadHandler',
 )
 
 # Login URL for the CMS module

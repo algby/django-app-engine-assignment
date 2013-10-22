@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ModelForm
+from django import forms
 
 MEDIA_TYPES = (
     ('audio', 'audio'),
@@ -14,10 +14,11 @@ class Media(models.Model):
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
     content = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(upload_to='/anywhere', blank=True)
 
 # Used to convert the media model to a form in the cms
-class MediaForm(ModelForm):
+class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-        exclude = ('date_created')
+        exclude = ('date_created', 'content',)
