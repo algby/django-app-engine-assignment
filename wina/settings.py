@@ -18,10 +18,14 @@ database_configs = {
         'NAME': 'wina',
         'USER': 'django',
         'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
     },
     'production': {
+	'ENGINE': 'django.db.backends.mysql',
+	'HOST': '/cloudsql/wina-assignment:db',
+	'NAME': 'wina',
+	'USER': 'root',
+    },
+    'prod_data_sync': {
         'ENGINE': 'google.appengine.ext.django.backends.rdbms',
         'INSTANCE': 'wina-assignment:db',
         'NAME': 'wina',
@@ -29,7 +33,7 @@ database_configs = {
 }
 
 DATABASES = {
-    'default': database_configs['production'] if os.getenv('SERVER_SOFTWARE') and os.getenv('SERVER_SOFTWARE').startswith('Google App Engine/') or os.getenv('DJANGO_ENV') == 'production' else database_configs['development']
+    'default': database_configs['production'] if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/') else database_configs['production'] if os.getenv('PROD_DATA_SYNC') == True else database_configs['development']
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
