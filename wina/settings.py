@@ -102,6 +102,8 @@ FILE_UPLOAD_HANDLERS = (
     'modules.django_gcs_upload_handler.GoogleCloudStorageUploadHandler',
 )
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 9999999999
+
 # Login URL for the CMS module
 LOGIN_URL = '/cms/login'
 

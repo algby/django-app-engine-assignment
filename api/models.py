@@ -14,7 +14,7 @@ class Media(models.Model):
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
     content = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
-    file = models.FileField(upload_to='/anywhere', blank=True)
+    file = models.FileField()
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
