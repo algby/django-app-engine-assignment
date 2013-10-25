@@ -76,3 +76,6 @@ nosetests.xml
 *.pyc
 local_settings.py
 brief.pdf
+
+# GCS Demo stuff
+gcs/*
