@@ -1,0 +1,11 @@
+{% extends 'cms/template.html' %}
+
+{% block content %}
+		
+	{{ story.content|safe }}
+
+	<p><a href="{% url 'story-edit' id=story.id %}" type="button" class="btn btn-warning">Edit</a></p>
+
+	<p>Created on {{ story.date_created }}</p>
+
+{% endblock content %}

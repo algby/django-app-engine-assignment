@@ -1,0 +1,12 @@
+{% extends 'cms/template.html' %}
+
+{% block header %}{% endblock header %}
+{% block jumbotron %}{% endblock jumbotron %}
+
+{% block content %}
+<form style="padding-top: 20px;">
+	<input autofocus class="form-control" id="media-search-ui" placeholder="Type your search term">
+</form>
+
+<ul id="media-search-results"></ul>
+{% endblock content %}
