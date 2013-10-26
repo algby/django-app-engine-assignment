@@ -18,13 +18,11 @@
 			<tbody>
 				{% for story_object in story %}
 				<tr>
-
-					{{ story_object.name }}
 					<td>
 						{{ story_object.id }}
 					</td>
 					<td>
-						<a href="/cms/story/view/{{ story_object.id }}">{{ story_object.title }}</a>
+						<a href="{% url 'story-view' id=story_object.id %}">{{ story_object.title }}</a>
 					</td>
 					<td>
 						{{ story_object.author }}
@@ -43,7 +41,7 @@
 		</table>
 
 	{% else %}
-		<p>No story available.</p>
+		<p>No stories found.</p>
 	{% endif %}
 
 {% endblock content %}

@@ -19,13 +19,11 @@
 			<tbody>
 				{% for media_object in media %}
 				<tr>
-
-					{{ media_object.name }}
 					<td>
 						{{ media_object.id }}
 					</td>
 					<td>
-						<a href="/cms/media/view/{{ media_object.id }}">{{ media_object.title }}</a>
+						<a href="{% url 'media-view' id=media_object.id %}">{{ media_object.title }}</a>
 					</td>
 					<td>
 						{{ media_object.type }}
@@ -47,7 +45,7 @@
 		</table>
 
 	{% else %}
-		<p>No media available.</p>
+		<p>No media found.</p>
 	{% endif %}
 
 {% endblock content %}
