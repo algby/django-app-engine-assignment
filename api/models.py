@@ -19,14 +19,14 @@ class Media(models.Model):
     file = models.FileField(upload_to='static', blank=True, null=True)
 
     def __unicode__(self):
-	return self.title
+        return self.title
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-	exclude = ('date_created', 'content', 'author',)
+        exclude = ('date_created', 'content', 'author',)
 
 # Used for creating a story that contains multiple bits of media
 class Story(models.Model):
@@ -38,6 +38,6 @@ class Story(models.Model):
 # Used to convert the Story model to a form in the cms
 class StoryForm(forms.ModelForm):
     class Meta:
-	model = Story
-	# Don't show the date created field because we want that to be set automatically
-	exclude = ('date_created', 'author',)
+        model = Story
+        # Don't show the date created field because we want that to be set automatically
+        exclude = ('date_created', 'author',)
