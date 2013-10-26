@@ -18,8 +18,15 @@ def media(request):
 def media_add_or_edit(request, id=False):
     # Is it a POST request, i.e is the form being submitted
     if request.method == 'POST':
-        # Pass the form all the HTTP POST data
-        media_form = MediaForm(request.POST, request.FILES)
+        # If the id is not false then we are editing, so we need to
+        # get an instance of that media first
+        if id is not False:
+            media = Media.objects.get(id=id)
+            media_form = MediaForm(request.POST, request.FILES, instance=media)
+
+        # Otherwise we can just pass the form data straight to the form
+        else:
+            media_form = MediaForm(request.POST, request.FILES)
 
         # Run through any validation rules we have
         if media_form.is_valid():

@@ -16,8 +16,15 @@ def story(request):
 def story_add_or_edit(request, id=False):
     # Is it a POST request, i.e is the form being submitted
     if request.method == 'POST':
-        # Pass the form all the HTTP POST data
-        story_form = StoryForm(request.POST)
+        # If the id is not false then we are editing, so we need to
+        # get an instance of that story first
+        if id is not False:
+            story = Story.objects.get(id=id)
+            story_form = StoryForm(request.POST, instance=story)
+
+        # Otherwise we can just pass the form data straight to the form
+        else:
+            story_form = StoryForm(request.POST)
 
         # Run through any validation rules we have
         if story_form.is_valid():
