@@ -1,5 +1,6 @@
 from django.db import models
 from django import forms
+from django.contrib.auth.models import User
 
 MEDIA_TYPES = (
     ('audio', 'audio'),
@@ -13,8 +14,9 @@ class Media(models.Model):
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
     content = models.TextField()
+    author = models.OneToOneField(User)
     date_created = models.DateTimeField(auto_now_add=True)
-    file = models.FileField(upload_to='/')
+    file = models.FileField(upload_to='static', blank=True, null=True)
 
     def __unicode__(self):
 	return self.title
