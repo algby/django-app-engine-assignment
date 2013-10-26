@@ -6,6 +6,6 @@
 
 	<p><a href="{% url 'story-edit' id=story.id %}" type="button" class="btn btn-warning">Edit</a></p>
 
-	<p>Created on {{ story.date_created }}</p>
+	<p>Created on {{ story.date_created }} by {{ story.author }}</p>
 
 {% endblock content %}

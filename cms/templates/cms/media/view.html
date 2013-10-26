@@ -34,6 +34,6 @@
 
 	<p><a href="{% url 'media-edit' id=media.id %}" type="button" class="btn btn-warning">Edit</a></p>
 
-	<p>Created on {{ media.date_created }}</p>
+	<p>Created on {{ media.date_created }} by {{ media.author }}</p>
 
 {% endblock content %}
