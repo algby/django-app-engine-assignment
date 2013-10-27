@@ -1,10 +1,10 @@
 import os
 from django.core.urlresolvers import reverse
 
-def get_serving_url(blob_key, development_route='blob-view', bucket_name='wina-assignment-media'):
+def get_serving_url(blob_key=None, file_name=None, development_route='blob-view', bucket_name='wina-assignment-media'):
     # What environment are we in, Is it production?
     if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-        return '/' + bucket_name + '.storage.googleapis.com/' + blob_key
+        return 'https://storage.cloud.google.com/' + bucket_name + '/' + file_name
 
     # Is it development?
     elif os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):

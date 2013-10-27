@@ -34,7 +34,7 @@ def media_add_or_edit(request, id=False):
             # Save the form data to the db
             form = media_form.save(commit=False)
             form.author = request.user
-            form.content = get_serving_url(request.FILES['file'].blob_key)
+            form.content = get_serving_url(blob_key=request.FILES['file'].blob_key, file_name=request.FILES['file'].name)
             form.save()
 
             # Show a success message to the user
