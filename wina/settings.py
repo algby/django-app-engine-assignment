@@ -21,13 +21,13 @@ database_configs = {
     },
     'production': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '/cloudsql/wina-assignment:db',
+        'HOST': '/cloudsql/wina-assignment:wina-production-google-cloud-sql-db',
         'NAME': 'wina',
         'USER': 'root',
     },
     'prod_data_sync': {
         'ENGINE': 'google.appengine.ext.django.backends.rdbms',
-        'INSTANCE': 'wina-assignment:db',
+        'INSTANCE': 'wina-assignment:wina-production-google-cloud-sql-db',
         'NAME': 'wina',
     }
 }
