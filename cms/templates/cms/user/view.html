@@ -12,6 +12,10 @@
 		<td>{{ user.username }}</td>
 	</tr>
 	<tr>
+		<td>Groups</td>
+		<td>{% for group in user.groups.all %}{{ group }} {% endfor %}</td>
+	</tr>
+	<tr>
 		<td>First Name</td>
 		<td>{{ user.first_name }}</td>
 	</tr>

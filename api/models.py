@@ -17,6 +17,15 @@ class Media(models.Model):
     author = models.ForeignKey(User)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+            ('add', 'Can add Media'),
+            ('edit_own', 'Can edit own Media'),
+            ('edit_any', 'Can edit any Media'),
+            ('delete_own', 'Can delete own Media'),
+            ('delete_any', 'Can delete any Media'),
+        )
+
     def __unicode__(self):
         return self.title
 
@@ -35,6 +44,15 @@ class Story(models.Model):
     content = models.TextField()
     author = models.ForeignKey(User)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        permissions = (
+            ('add', 'Can add Story'),
+            ('edit_own', 'Can edit own Story'),
+            ('edit_any', 'Can edit any Story'),
+            ('delete_own', 'Can delete own Story'),
+            ('delete_any', 'Can delete any Story'),
+        )
 
 # Used to convert the Story model to a form in the cms
 class StoryForm(forms.ModelForm):
@@ -55,6 +73,8 @@ class UserForm(forms.ModelForm):
     # Override the save method to add our custom fields in correctly
     def save(self, commit=True):
         user_form = super(UserForm, self).save(commit=False)
+
+        # Save the users password, this automatically hashes it
         user_form.set_password(user_form.password)
 
         if commit:

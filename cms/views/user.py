@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 from api.models import UserForm
 
@@ -30,9 +31,19 @@ def user_add_or_edit(request, id=False):
         # Run through any validation rules we have
         if user_form.is_valid():
             # Save the form data to the db
-            form = user_form.save(commit=False)
-            form.author = request.user
-            form.save()
+            user_form.save()
+
+            # Was a group set for the user?
+            group_ids = request.POST.getlist('groups', False)
+
+            # Clear the users existing group memberships, this isn't optimal
+            # but it works well enough
+            user.groups.clear()
+
+            # If so add the user to that group
+            if group_ids:
+                for group_id in group_ids:
+                    user.groups.add(Group.objects.get(id=group_id))
 
             # Show a success message to the user
             message_suffix = 'added!' if id is False else 'edited'
