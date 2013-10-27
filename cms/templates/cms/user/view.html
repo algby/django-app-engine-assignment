@@ -1,0 +1,34 @@
+{% extends 'cms/template.html' %}
+
+{% block content %}
+		
+<table class="table table-bordered">
+	<tr>
+		<td>ID</td>
+		<td>{{ user.id }}</td>
+	</tr>
+	<tr>
+		<td>Username</td>
+		<td>{{ user.username }}</td>
+	</tr>
+	<tr>
+		<td>First Name</td>
+		<td>{{ user.first_name }}</td>
+	</tr>
+	<tr>
+		<td>Last Name</td>
+		<td>{{ user.last_name }}</td>
+	</tr>
+	<tr>
+		<td>Email</td>
+		<td>{{ user.email }}</td>
+	</tr>
+	<tr>
+		<td>Date Joined</td>
+		<td>{{ user.date_joined }}</td>
+	</tr>
+</table>
+
+<p><a href="{% url 'user-edit' id=user.id %}" type="button" class="btn btn-warning">Edit</a></p>
+
+{% endblock content %}

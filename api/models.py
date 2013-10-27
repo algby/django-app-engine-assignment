@@ -42,3 +42,22 @@ class StoryForm(forms.ModelForm):
         model = Story
         # Don't show the date created field because we want that to be set automatically
         exclude = ('date_created', 'author',)
+
+# Used to convert the Story model to a form in the cms
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        # There's more fields we want to exclude than include so just list the ones we want
+        fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups']
+
+    # Override the save method to add our custom fields in correctly
+    def save(self, commit=True):
+        user_form = super(UserForm, self).save(commit=False)
+        user_form.set_password(user_form.password)
+
+        if commit:
+            user_form.save()
+
+        return user_form
