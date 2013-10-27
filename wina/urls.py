@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     # Include the routes for the cms module
     url(r'^cms', include('cms.urls')),
 
-    # Include the routes for the site frontend
-    url(r'^$', include('frontend.urls')),
+    # Send any other requests to the frontend urls
+    url('', include('frontend.urls')),
 )
