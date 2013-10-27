@@ -4,9 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core import serializers
 
-from google.appengine.api.images import get_serving_url
-
 from api.models import Media, MediaForm
+from modules.django_gcs_get_serving_url import get_serving_url
 
 # Render the cms media home page if the user is logged in
 @login_required
