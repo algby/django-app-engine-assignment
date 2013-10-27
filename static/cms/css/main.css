@@ -1,3 +1,7 @@
+.navbar-inverse .navbar-brand {
+	color: white;
+}
+
 #media-search-results {
 	margin: 0;
 	padding: 0;
