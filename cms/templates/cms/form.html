@@ -15,6 +15,9 @@
 							{% for error in field.errors %}
 								<span class="label label-danger">{{ error }}</span>
 							{% endfor %}
+							{% if field.help_text %}
+								<p class="help-inline"><small>{{ field.help_text }}</small></p>
+							{% endif %}
 						</span>
 					</div>
 				</div>
