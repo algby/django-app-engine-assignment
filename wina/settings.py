@@ -32,9 +32,14 @@ database_configs = {
     }
 }
 
-DATABASES = {
-    'default': database_configs['production'] if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/') else database_configs['production'] if os.getenv('PROD_DATA_SYNC') == True else database_configs['development']
-}
+if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
+    DATABASES = {'default': database_configs['prod_data_sync']}
+
+elif os.getenv('PROD_DATA_SYNC') == '1':
+    DATABASES = {'default': database_configs['prod_data_sync']}
+
+else:
+    DATABASES = {'default': database_configs['development']}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
