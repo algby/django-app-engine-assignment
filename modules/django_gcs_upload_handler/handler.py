@@ -1,6 +1,12 @@
 from django.core.files.uploadhandler import FileUploadHandler
 from django.core.files.uploadedfile import UploadedFile
 from .. import cloudstorage as gcs
+from google.appengine.api.blobstore import create_gs_key
+
+class GoogleCloudStorageUploadedFile(UploadedFile):
+    def __init__(self, file=None, name=None, blob_key=None, content_type=None, size=None, charset=None):
+        super(GoogleCloudStorageUploadedFile, self).__init__(file, name, content_type, size, charset)
+        self.blob_key = blob_key
 
 class GoogleCloudStorageUploadHandler(FileUploadHandler):
     def __init__(self, request=None):
@@ -23,12 +29,13 @@ class GoogleCloudStorageUploadHandler(FileUploadHandler):
         self.file_size = file_size
         self.gcs_file.close()
 
-        return UploadedFile(
-            file = self.gcs_file,
-            name = self.file_name,
-            content_type = self.content_type,
-            size = self.file_size,
-            charset = self.charset
+        return GoogleCloudStorageUploadedFile(
+            file=self.gcs_file,
+            name=self.file_name,
+            blob_key=create_gs_key('/gs' + self.bucket + '/' + self.file_name),
+            content_type=self.content_type,
+            size=self.file_size,
+            charset=self.charset
         )
 
     def new_file(self, field_name, file_name, content_type, content_length, charset=None):

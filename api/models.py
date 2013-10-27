@@ -14,15 +14,16 @@ class Media(models.Model):
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
     content = models.TextField()
-    author = models.OneToOneField(User)
+    author = models.ForeignKey(User)
     date_created = models.DateTimeField(auto_now_add=True)
-    file = models.FileField(upload_to='static', blank=True, null=True)
 
     def __unicode__(self):
         return self.title
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
+    file = forms.FileField()
+
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
@@ -32,7 +33,7 @@ class MediaForm(forms.ModelForm):
 class Story(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    author = models.OneToOneField(User)
+    author = models.ForeignKey(User)
     date_created = models.DateTimeField(auto_now_add=True)
 
 # Used to convert the Story model to a form in the cms

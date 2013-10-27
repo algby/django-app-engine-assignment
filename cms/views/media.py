@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core import serializers
 
+from google.appengine.api.images import get_serving_url
+
 from api.models import Media, MediaForm
 
 # Render the cms media home page if the user is logged in
@@ -33,6 +35,7 @@ def media_add_or_edit(request, id=False):
             # Save the form data to the db
             form = media_form.save(commit=False)
             form.author = request.user
+            form.content = get_serving_url(request.FILES['file'].blob_key)
             form.save()
 
             # Show a success message to the user
