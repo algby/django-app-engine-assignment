@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
+from django.core import serializers
 
 from api.models import Story, StoryForm
 
@@ -75,3 +77,13 @@ def story_delete(request, id):
 
     # Redirect them back to the story home page
     return redirect('story-home')
+
+# Handles searching Story and returning as JSON
+def story_search_ajax(request, query):
+    # Search for the Story objects
+    stories = Story.objects.filter(title__icontains=query)
+
+    # Serialize the data as json
+    data = serializers.serialize('json', stories)
+
+    return HttpResponse(data, mimetype='application/json')

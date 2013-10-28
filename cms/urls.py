@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^/story/add$', views.story_add_or_edit, name='story-add'),
     url(r'^/story/edit/(?P<id>\d+)$', views.story_add_or_edit, name='story-edit'),
     url(r'^/story/delete/(?P<id>\d+)$', views.story_delete, name='story-delete'),
+    url(r'^/story/search/ajax/(?P<query>.*)$', views.story_search_ajax, name='story-search-ajax'),
 
     # User Routes
     url(r'^/users$', views.user, name='user-home'),
