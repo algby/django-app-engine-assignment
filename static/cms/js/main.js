@@ -14,7 +14,7 @@ tinymce.init({
 			onclick: function() {
 				editor.windowManager.open({
 					title: 'Media Search',
-					file: '/cms/media/search/ui',
+					file: '/cms/media/search/tinymce',
 					width: 320,
 					height: 240
 				});
