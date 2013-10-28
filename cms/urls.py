@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^/media/edit/(?P<id>\d+)$', views.media_add_or_edit, name='media-edit'),
     url(r'^/media/delete/(?P<id>\d+)$', views.media_delete, name='media-delete'),
     url(r'^/media/search/ajax/(?P<query>.*)$', views.media_search_ajax, name='media-search-ajax'),
-    url(r'^/media/search/ui$', views.media_search_ui, name='media-search-ui'),
+    url(r'^/media/search/tinymce$', views.media_search_tinymce, name='media-search-tinymce'),
 
     # Story Routes
     url(r'^/stories$', views.story, name='story-home'),

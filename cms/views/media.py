@@ -90,5 +90,5 @@ def media_search_ajax(request, query):
     return HttpResponse(data, mimetype='application/json')
 
 @login_required
-def media_search_ui(request):
-    return render(request, 'cms/media/search/ui.html', {'no_padding': True})
+def media_search_tinymce(request):
+    return render(request, 'cms/media/search/tinymce.html', {'no_padding': True})
