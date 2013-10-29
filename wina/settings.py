@@ -5,12 +5,6 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
-
 # Database configs, only one of those will be chosen based on the env
 database_configs = {
     'development': {
@@ -32,6 +26,7 @@ database_configs = {
     }
 }
 
+# Set the correct database host for the app
 if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
     DATABASES = {'default': database_configs['prod_data_sync']}
 
@@ -138,6 +133,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
+# The default url configuration to use
 ROOT_URLCONF = 'wina.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
