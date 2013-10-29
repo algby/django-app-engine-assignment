@@ -69,7 +69,7 @@ def user_add_or_edit(request, id=False):
 def user_view(request, id):
     user = CustomUser.objects.get(id=id)
 
-    return render(request, 'cms/user/view.html', {'user': user, 'title': user.username})
+    return render(request, 'cms/user/view.html', {'user': user, 'title': user.first_name + ' ' + user.last_name})
 
 # Handles activating another user if the current user is logged in
 @login_required

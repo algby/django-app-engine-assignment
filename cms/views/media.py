@@ -81,7 +81,7 @@ def media_delete(request, id):
 
 # Handles searching Media and returning as JSON
 def media_search_ajax(request, query):
-    # Search for the object
+    # Search for the Media objects
     media = Media.objects.filter(title__icontains=query)
 
     # Serialize the data as json
