@@ -12,61 +12,64 @@ MEDIA_TYPES = (
 
 class CustomUser(User):
     class Meta:
-	proxy = True
-	permissions = (
-	    ('add', 'Allowed to add Users'),
-	    ('edit_own', 'Allowed to edit own User'),
-	    ('edit_any', 'Allowed to edit any User'),
-	    ('delete_own', 'Allowed to delete own User'),
-	    ('delete_any', 'Allowed to delete any User'),
-	)
+        proxy = True
+        permissions = (
+            ('wina_add_user', 'Allowed to add Users'),
+            ('wina_edit_own_user', 'Allowed to edit own User'),
+            ('wina_edit_any_user', 'Allowed to edit any User'),
+            ('wina_deactivate_any_user', 'Allowed to deactivate any User'),
+            ('wina_activate_any_user', 'Allowed to activate any User'),
+        )
 
 # Used to convert the User model to a form in the cms
 class CustomUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
-	model = CustomUser
-	# There's more fields we want to exclude than include so just list the ones we want
-	fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups']
+        model = CustomUser
+        # There's more fields we want to exclude than include so just list the ones we want
+        fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups']
 
     # Override the save method to add our custom fields in correctly
     def save(self, commit=True):
-	user_form = super(CustomUserForm, self).save(commit=False)
+        user_form = super(CustomUserForm, self).save(commit=False)
 
-	# Save the users password, this automatically hashes it
-	user_form.set_password(user_form.password)
+        # Save the users password, this automatically hashes it
+        user_form.set_password(user_form.password)
 
-	if commit:
-	    user_form.save()
+        if commit:
+            user_form.save()
 
-	return user_form
+        return user_form
 
 # Used to convert the Group model to a form in the cms
 class GroupForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
-	Permission.objects.exclude(name__startswith='Can'),
-	widget=admin.widgets.FilteredSelectMultiple('permissions', False)
+        Permission.objects.filter(codename__startswith='wina_'),
+        widget=admin.widgets.FilteredSelectMultiple('permissions', False)
     )
 
     class Meta:
-	model = Group
+        model = Group
+
 # Used for uploading media that forms part of a story
 class Media(models.Model):
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
-    content = models.TextField()
-    author = models.ForeignKey(User)
     author = models.ForeignKey(CustomUser)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    # Either this or content is required
+    content = models.TextField(blank=True)
+    file = models.FileField(upload_to='nowhere', blank=True)
+
     class Meta:
         permissions = (
-	    ('add', 'Allowed to add Media'),
-	    ('edit_own', 'Allowed to edit own Media'),
-	    ('edit_any', 'Allowed to edit any Media'),
-	    ('delete_own', 'Allowed to delete own Media'),
-	    ('delete_any', 'Allowed to delete any Media'),
+            ('wina_add_media', 'Allowed to add Media'),
+            ('wina_edit_own_media', 'Allowed to edit own Media'),
+            ('wina_edit_any_media', 'Allowed to edit any Media'),
+            ('wina_delete_own_media', 'Allowed to delete own Media'),
+            ('wina_delete_any_media', 'Allowed to delete any Media'),
         )
 
     def __unicode__(self):
@@ -74,12 +77,10 @@ class Media(models.Model):
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
-    file = forms.FileField()
-
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-        exclude = ('date_created', 'content', 'author',)
+        exclude = ('date_created', 'author',)
 
 # Used for creating a story that contains multiple bits of media
 class Story(models.Model):
@@ -90,10 +91,11 @@ class Story(models.Model):
 
     class Meta:
         permissions = (
-	    ('edit_own', 'Allowed to edit own Story'),
-	    ('edit_any', 'Allowed to edit any Story'),
-	    ('delete_own', 'Allowed to delete own Story'),
-	    ('delete_any', 'Allowed to delete any Story'),
+            ('wina_add_story', 'Allowed to add a Story'),
+            ('wina_edit_own_story', 'Allowed to edit own Story'),
+            ('wina_edit_any_story', 'Allowed to edit any Story'),
+            ('wina_delete_own_story', 'Allowed to delete own Story'),
+            ('wina_delete_any_story', 'Allowed to delete any Story'),
         )
 
 # Used to convert the Story model to a form in the cms
