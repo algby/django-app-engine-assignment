@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
 from api.models import CustomGroup, CustomGroupForm
 
@@ -14,17 +15,30 @@ def group(request):
 # Render the add/edit media form or handle saving it
 @login_required
 def group_add_or_edit(request, id=False):
+    user = request.user
+
     # Is it a POST request, i.e is the form being submitted
     if request.method == 'POST':
         # If the id is not false then we are editing, so we need to
         # get an instance of that group first
         if id is not False:
-            group = CustomGroup.objects.get(id=id)
-            group_form = CustomGroupForm(request.POST, instance=group)
+            # Check the user has valid permissions to edit a group
+            if user.has_perm('auth.wina_edit_group'):
+                group = CustomGroup.objects.get(id=id)
+                group_form = CustomGroupForm(request.POST, instance=group)
 
-        # Otherwise we can just pass the form data straight to the form
+            else:
+                raise PermissionDenied
+
+        # Otherwise we can just pass the form data straight to the form, this is
+        # a POST request for adding a group
         else:
-            group_form = CustomGroupForm(request.POST)
+            # Check the user has valid permissions to add a group
+            if user.has_perm('auth.wina_add_group'):
+                group_form = CustomGroupForm(request.POST)
+
+            else:
+                raise PermissionDenied
 
         # Run through any validation rules we have
         if group_form.is_valid():
@@ -40,14 +54,24 @@ def group_add_or_edit(request, id=False):
 
     # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
     if id is not False:
-        group = CustomGroup.objects.get(id=id)
-        group_form = group_form if request.method == 'POST' else CustomGroupForm(instance=group)
-        template_data = {'form': group_form, 'title': group.name}
+        # Check the user has valid permissions to edit a group
+        if user.has_perm('auth.wina_edit_group'):
+            group = CustomGroup.objects.get(id=id)
+            group_form = group_form if request.method == 'POST' else CustomGroupForm(instance=group)
+            template_data = {'form': group_form, 'title': group.name}
+
+        else:
+            raise PermissionDenied
 
     # If not we must be adding new group as we have no id in the URL
     else:
-        group_form = group_form if request.method == 'POST' else CustomGroupForm()
-        template_data = {'form': group_form, 'title': 'Add Group'}
+        # Check the user has valid permissions to add a group
+        if user.has_perm('auth.wina_add_group'):
+            group_form = group_form if request.method == 'POST' else CustomGroupForm()
+            template_data = {'form': group_form, 'title': 'Add Group'}
+
+        else:
+            raise PermissionDenied
 
     return render(request, 'cms/form.html', template_data)
 
