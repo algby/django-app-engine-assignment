@@ -26,8 +26,8 @@ def story_add_or_edit(request, id=False):
         if id is not False:
             story = Story.objects.get(id=id)
 
-            # Check the has valid permissions to edit this story
-            if user.has_perm('api.wina_edit_any_story') or (story.author == user and user.has_perm('api.wina_edit_own_story')):
+            # Check the user has valid permissions to edit this story
+            if user.has_perm('api.wina_edit_any_story') or (story.author.id == user.id and user.has_perm('api.wina_edit_own_story')):
                 # Get an instance of the StormForm
                 story_form = StoryForm(request.POST, instance=story)
 
@@ -37,7 +37,7 @@ def story_add_or_edit(request, id=False):
         # Otherwise we can just pass the form data straight to the form, this is
         # a POST request for adding a story
         else:
-            # Check the has valid permissions to add a story
+            # Check the user has valid permissions to add a story
             if user.has_perm('api.wina_add_story'):
                 story_form = StoryForm(request.POST)
 
@@ -48,8 +48,7 @@ def story_add_or_edit(request, id=False):
         if story_form.is_valid():
             # Save the form data to the db
             form = story_form.save(commit=False)
-            user = CustomUser.objects.get(id=request.user.id)
-            form.author = user
+            form.author = CustomUser.objects.get(id=request.user.id)
             form.save()
 
             # Show a success message to the user
@@ -64,8 +63,8 @@ def story_add_or_edit(request, id=False):
     if id is not False:
         story = Story.objects.get(id=id)
 
-        # Check the has valid permissions to edit this story
-        if user.has_perm('api.wina_edit_any_story') or (story.author == user and user.has_perm('api.wina_edit_own_story')):
+        # Check the user has valid permissions to edit this story
+        if user.has_perm('api.wina_edit_any_story') or (story.author.id == user.id and user.has_perm('api.wina_edit_own_story')):
             story_form = story_form if request.method == 'POST' else StoryForm(instance=story)
             template_data = {'form': story_form, 'title': story.title}
 
@@ -74,7 +73,7 @@ def story_add_or_edit(request, id=False):
 
     # If not we must be adding new story as we have no id in the URL
     else:
-        # Check the has valid permissions to add a story
+        # Check the user has valid permissions to add a story
         if user.has_perm('api.wina_add_story'):
             story_form = story_form if request.method == 'POST' else StoryForm()
             template_data = {'form': story_form, 'title': 'Add Story'}
@@ -100,8 +99,8 @@ def story_delete(request, id):
     # Look up the story object
     story = Story.objects.get(id=id)
 
-    # Check the has valid permissions to delete this story
-    if user.has_perm('api.wina_delete_any_story') or (story.author == user and user.has_perm('api.wina_delete_own_story')):
+    # Check the user has valid permissions to delete this story
+    if user.has_perm('api.wina_delete_any_story') or (story.author.id == user.id and user.has_perm('api.wina_delete_own_story')):
         # Delete it from the database
         story.delete()
 

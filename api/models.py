@@ -79,7 +79,7 @@ class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-	exclude = ('date_created', 'author', 'content',)
+        exclude = ('date_created', 'author', 'content',)
 
 # Used for creating a story that contains multiple bits of media
 class Story(models.Model):
