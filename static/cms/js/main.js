@@ -25,7 +25,10 @@ tinymce.init({
 // End TinyMCE
 
 // Code reliant on jQuery and the DOM being ready
-$(document).ready(function() {
+$(window).load(function() {
+
+	// Init the select2 jQuery plugin
+	$('select').select2({width: 'resolve'});
 
 	$('#media-search-ui').on('keyup', function(e) {
 
