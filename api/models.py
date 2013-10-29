@@ -56,12 +56,9 @@ class GroupForm(forms.ModelForm):
 class Media(models.Model):
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
+    content = models.TextField(blank=True)
     author = models.ForeignKey(CustomUser)
     date_created = models.DateTimeField(auto_now_add=True)
-
-    # Either this or content is required
-    content = models.TextField(blank=True)
-    file = models.FileField(upload_to='nowhere', blank=True)
 
     class Meta:
         permissions = (
@@ -77,10 +74,12 @@ class Media(models.Model):
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
+    file = forms.FileField()
+
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-        exclude = ('date_created', 'author',)
+	exclude = ('date_created', 'author', 'content',)
 
 # Used for creating a story that contains multiple bits of media
 class Story(models.Model):
