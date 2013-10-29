@@ -10,6 +10,38 @@ MEDIA_TYPES = (
     ('image', 'image'),
 )
 
+class CustomUser(User):
+    class Meta:
+	proxy = True
+	permissions = (
+	    ('add', 'Allowed to add Users'),
+	    ('edit_own', 'Allowed to edit own User'),
+	    ('edit_any', 'Allowed to edit any User'),
+	    ('delete_own', 'Allowed to delete own User'),
+	    ('delete_any', 'Allowed to delete any User'),
+	)
+
+# Used to convert the User model to a form in the cms
+class CustomUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+	model = CustomUser
+	# There's more fields we want to exclude than include so just list the ones we want
+	fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups']
+
+    # Override the save method to add our custom fields in correctly
+    def save(self, commit=True):
+	user_form = super(CustomUserForm, self).save(commit=False)
+
+	# Save the users password, this automatically hashes it
+	user_form.set_password(user_form.password)
+
+	if commit:
+	    user_form.save()
+
+	return user_form
+
 # Used to convert the Group model to a form in the cms
 class GroupForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
@@ -25,15 +57,16 @@ class Media(models.Model):
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
     content = models.TextField()
     author = models.ForeignKey(User)
+    author = models.ForeignKey(CustomUser)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         permissions = (
-            ('add', 'Can add Media'),
-            ('edit_own', 'Can edit own Media'),
-            ('edit_any', 'Can edit any Media'),
-            ('delete_own', 'Can delete own Media'),
-            ('delete_any', 'Can delete any Media'),
+	    ('add', 'Allowed to add Media'),
+	    ('edit_own', 'Allowed to edit own Media'),
+	    ('edit_any', 'Allowed to edit any Media'),
+	    ('delete_own', 'Allowed to delete own Media'),
+	    ('delete_any', 'Allowed to delete any Media'),
         )
 
     def __unicode__(self):
@@ -52,16 +85,15 @@ class MediaForm(forms.ModelForm):
 class Story(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(CustomUser)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         permissions = (
-            ('add', 'Can add Story'),
-            ('edit_own', 'Can edit own Story'),
-            ('edit_any', 'Can edit any Story'),
-            ('delete_own', 'Can delete own Story'),
-            ('delete_any', 'Can delete any Story'),
+	    ('edit_own', 'Allowed to edit own Story'),
+	    ('edit_any', 'Allowed to edit any Story'),
+	    ('delete_own', 'Allowed to delete own Story'),
+	    ('delete_any', 'Allowed to delete any Story'),
         )
 
 # Used to convert the Story model to a form in the cms
@@ -70,24 +102,3 @@ class StoryForm(forms.ModelForm):
         model = Story
         # Don't show the date created field because we want that to be set automatically
         exclude = ('date_created', 'author',)
-
-# Used to convert the Story model to a form in the cms
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
-    class Meta:
-        model = User
-        # There's more fields we want to exclude than include so just list the ones we want
-        fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups']
-
-    # Override the save method to add our custom fields in correctly
-    def save(self, commit=True):
-        user_form = super(UserForm, self).save(commit=False)
-
-        # Save the users password, this automatically hashes it
-        user_form.set_password(user_form.password)
-
-        if commit:
-            user_form.save()
-
-        return user_form
