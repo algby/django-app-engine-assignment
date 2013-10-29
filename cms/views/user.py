@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
-from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
 
-from api.models import CustomUser, CustomUserForm
+from api.models import CustomUser, CustomUserForm, CustomGroup
 
 # Render the cms user home page if the user is logged in
 @login_required
@@ -57,7 +56,7 @@ def user_add_or_edit(request, id=False):
             # If so add the user to that group
             if group_ids:
                 for group_id in group_ids:
-                    user.groups.add(Group.objects.get(id=group_id))
+                    user.groups.add(CustomGroup.objects.get(id=group_id))
 
             # Show a success message to the user
             message_suffix = 'added!' if id is False else 'edited'

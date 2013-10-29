@@ -1,14 +1,13 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from api.models import GroupForm
+from api.models import CustomGroup, CustomGroupForm
 
 # Render the cms group home page if the user is logged in
 @login_required
 def group(request):
-    groups = Group.objects.all().order_by('id')
+    groups = CustomGroup.objects.all().order_by('id')
 
     return render(request, 'cms/group/index.html', {'title': 'Groups', 'groups': groups})
 
@@ -20,12 +19,12 @@ def group_add_or_edit(request, id=False):
         # If the id is not false then we are editing, so we need to
         # get an instance of that group first
         if id is not False:
-            group = Group.objects.get(id=id)
-            group_form = GroupForm(request.POST, instance=group)
+            group = CustomGroup.objects.get(id=id)
+            group_form = CustomGroupForm(request.POST, instance=group)
 
         # Otherwise we can just pass the form data straight to the form
         else:
-            group_form = GroupForm(request.POST)
+            group_form = CustomGroupForm(request.POST)
 
         # Run through any validation rules we have
         if group_form.is_valid():
@@ -41,13 +40,13 @@ def group_add_or_edit(request, id=False):
 
     # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
     if id is not False:
-        group = Group.objects.get(id=id)
-        group_form = group_form if request.method == 'POST' else GroupForm(instance=group)
+        group = CustomGroup.objects.get(id=id)
+        group_form = group_form if request.method == 'POST' else CustomGroupForm(instance=group)
         template_data = {'form': group_form, 'title': group.name}
 
     # If not we must be adding new group as we have no id in the URL
     else:
-        group_form = group_form if request.method == 'POST' else GroupForm()
+        group_form = group_form if request.method == 'POST' else CustomGroupForm()
         template_data = {'form': group_form, 'title': 'Add Group'}
 
     return render(request, 'cms/form.html', template_data)
@@ -55,6 +54,6 @@ def group_add_or_edit(request, id=False):
 # Handles retrieving a group object and returning it to the template
 @login_required
 def group_view(request, id):
-    group = Group.objects.get(id=id)
+    group = CustomGroup.objects.get(id=id)
 
     return render(request, 'cms/group/view.html', {'group': group, 'title': group.name})

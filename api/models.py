@@ -42,15 +42,24 @@ class CustomUserForm(forms.ModelForm):
 
         return user_form
 
+class CustomGroup(Group):
+    class Meta:
+        proxy = True
+        permissions = (
+            ('wina_add_group', 'Allowed to add a Group'),
+            ('wina_edit_group', 'Allowed to edit a Group'),
+            ('wina_delete_group', 'Allowed to delete a Group'),
+        )
+
 # Used to convert the Group model to a form in the cms
-class GroupForm(forms.ModelForm):
+class CustomGroupForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
         Permission.objects.filter(codename__startswith='wina_'),
         widget=admin.widgets.FilteredSelectMultiple('permissions', False)
     )
 
     class Meta:
-        model = Group
+        model = CustomGroup
 
 # Used for uploading media that forms part of a story
 class Media(models.Model):
