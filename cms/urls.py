@@ -32,6 +32,9 @@ urlpatterns = patterns('',
     url(r'^/user/activate/(?P<id>\d+)$', views.user_activate, name='user-activate'),
     url(r'^/user/deactivate/(?P<id>\d+)$', views.user_deactivate, name='user-deactivate'),
 
+    # Search Media and Stories
+    url(r'^/search/(?P<query>.*)$', views.search, name='cms-search'),
+
     # Catch all route
     url(r'^$', views.index, name='cms-home')
 )
