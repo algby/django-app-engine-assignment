@@ -32,6 +32,12 @@ urlpatterns = patterns('',
     url(r'^/user/activate/(?P<id>\d+)$', views.user_activate, name='user-activate'),
     url(r'^/user/deactivate/(?P<id>\d+)$', views.user_deactivate, name='user-deactivate'),
 
+    # Group Routes
+    url(r'^/groups$', views.group, name='group-home'),
+    url(r'^/group/view/(?P<id>\d+)$', views.group_view, name='group-view'),
+    url(r'^/group/add$', views.group_add_or_edit, name='group-add'),
+    url(r'^/group/edit/(?P<id>\d+)$', views.group_add_or_edit, name='group-edit'),
+
     # Search Media and Stories
     url(r'^/search/(?P<query>.*)$', views.search, name='cms-search'),
 

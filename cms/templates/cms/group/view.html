@@ -1,0 +1,22 @@
+{% extends 'cms/template.html' %}
+
+{% block content %}
+		
+<table class="table table-bordered">
+	<tr>
+		<td>ID</td>
+		<td>{{ group.id }}</td>
+	</tr>
+	<tr>
+		<td>Name</td>
+		<td>{{ group.name }}</td>
+	</tr>
+	<tr>
+		<td>Members</td>
+		<td>{{ group.user_set.count }}</td>
+	</tr>
+</table>
+
+<p><a href="{% url 'user-edit' id=user.id %}" type="button" class="btn btn-warning">Edit</a></p>
+
+{% endblock content %}

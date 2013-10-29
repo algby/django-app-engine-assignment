@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
+from django.contrib import admin
 
 MEDIA_TYPES = (
     ('audio', 'audio'),
@@ -9,6 +10,15 @@ MEDIA_TYPES = (
     ('image', 'image'),
 )
 
+# Used to convert the Group model to a form in the cms
+class GroupForm(forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+	Permission.objects.exclude(name__startswith='Can'),
+	widget=admin.widgets.FilteredSelectMultiple('permissions', False)
+    )
+
+    class Meta:
+	model = Group
 # Used for uploading media that forms part of a story
 class Media(models.Model):
     title = models.CharField(max_length=100)

@@ -27,7 +27,14 @@
 					<li><a href="{% url 'media-home' %}">Media</a></li>
 					<li><a href="{% url 'story-home' %}">Stories</a></li>
 					<li><a href="{% url 'user-home' %}">Users</a></li>
+					<li><a href="{% url 'group-home' %}">Groups</a></li>
 				</ul>
+
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" id="navbar-search" placeholder="Search Media &amp; Stories..">
+					</div>
+				</form>
 
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="{% url 'logout' %}">Log Out</a></li>
