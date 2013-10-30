@@ -8,8 +8,9 @@
 	list-style: inside;
 	margin-top: 20px;
 }
-form #id_content, form #id_file {
-	/*display: none;*/
+
+#add-media-form .form-content, #add-media-form .form-file {
+	display: none;
 }
 
 /* Select2 is bugs when trying to calculate the width sometimes, this 'fixes' it */

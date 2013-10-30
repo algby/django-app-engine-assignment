@@ -48,10 +48,14 @@ def media_add_or_edit(request, id=False):
         # Run through any validation rules we have
         if media_form.is_valid():
             # Save the form data to the db
-            form = media_form.save(commit=False)
-            form.author = CustomUser.objects.get(id=request.user.id)
-            form.content = get_serving_url(blob_key=request.FILES['file'].blob_key, file_name=request.FILES['file'].name)
-            form.save()
+            media_form = media_form.save(commit=False)
+            media_form.author = CustomUser.objects.get(id=request.user.id)
+
+            # Is audio/video/image being submitted? If so we need to override content
+            if media_form.type in ['audio', 'video', 'image']:
+                media_form.content = get_serving_url(blob_key=request.FILES['file'].blob_key, file_name=request.FILES['file'].name)
+
+            media_form.save()
 
             # Show a success message to the user
             message_suffix = 'added!' if id is False else 'edited'

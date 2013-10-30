@@ -5,7 +5,11 @@
 	<p>
 	{% if media.type == 'text' %}
 
-		{{ media.content }}
+		{% comment %}
+		This is potentially a bit of a security risk and in practice seeing as the content can come
+		from the public it would need to be sanitised before being used.
+		{% endcomment %}
+		{{ media.content|safe }}
 
 	{% elif media.type == 'image' %}
 

@@ -83,12 +83,29 @@ class Media(models.Model):
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
-    file = forms.FileField()
+    file = forms.FileField(required=False)
 
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-        exclude = ('date_created', 'author', 'content',)
+        exclude = ('date_created', 'author',)
+
+    # Custom validation
+    def clean(self):
+        # Import the ValidationError exception from Django
+        from django.core.exceptions import ValidationError
+
+        # Get the data that has already been passed through Django's validation
+        cleaned_data = super(MediaForm, self).clean()
+
+        if cleaned_data['type'] in ['audio', 'video', 'image'] and cleaned_data['file'] is None:
+            raise ValidationError('When the type is audio, video or image you must specify a file to upload')
+
+        elif cleaned_data['type'] == 'text' and cleaned_data['content'] == '':
+            raise ValidationError('When the type is text you must specify content to upload')
+
+        return cleaned_data
+
 
 # Used for creating a story that contains multiple bits of media
 class Story(models.Model):
