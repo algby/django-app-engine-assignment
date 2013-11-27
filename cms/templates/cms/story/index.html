@@ -8,10 +8,14 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<td>ID</td>
-					<td>Title</td>
-					<td>Author</td>
-					<td>Date Created</td>
+					{% for field in fields %}
+						<td>
+							{% if order_by == field.name %}{{ arrow|safe }}{% endif %}
+							<a href="{{ field.link }}">
+								{{ field.arrow|safe }} {{ field.title }}
+							</a>
+						</td>
+					{% endfor %}
 					<td>Actions</td>
 				</tr>
 			</thead>
