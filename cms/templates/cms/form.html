@@ -4,16 +4,16 @@
 
 <form class="form-horizontal" id="{{ title|slugify|lower }}-form"method="post" enctype="multipart/form-data">
 	{% csrf_token %}
-	
+
 	{% for error in form.non_field_errors %}
 		<p><span class="label label-danger">{{ error }}</span></p>
-	{% endfor %} 
+	{% endfor %}
 
 	{% for field in form %}
 		<p>
 			{% if field.errors %}
 				<div class="control-group error form-{{ field.html_name }}">
-					<label class="control-label">{{ field.label }}</label> 
+					<label class="control-label">{{ field.label }}</label>
 					<div class="controls">
 						{{ field }}
 						<span class="help-inline">
@@ -28,7 +28,7 @@
 				</div>
 			{% else %}
 				<div class="control-group form-{{ field.html_name }}">
-					<label class="control-label">{{ field.label }}</label> 
+					<label class="control-label">{{ field.label }}</label>
 					<div class="controls">
 						{{ field }}
 						{% if field.help_text %}

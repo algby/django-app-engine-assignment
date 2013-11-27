@@ -12,9 +12,42 @@ from modules.django_gcs_get_serving_url import get_serving_url
 # Render the cms media home page if the user is logged in
 @login_required
 def media(request):
-    media = Media.objects.all()
+    # Get the order_by param from the request
+    order_by = request.GET.get('order_by', 'id')
 
-    return render(request, 'cms/media/index.html', {'title': 'Media', 'media': media})
+    # Get the media
+    media = Media.objects.all().order_by(order_by)
+
+    # List of fields to display in the template, passing this over
+    # makes the template simpler
+    fields = (
+        {'name': 'id', 'title': 'ID'},
+        {'name': 'title', 'title': 'Title'},
+        {'name': 'type', 'title': 'Type'},
+        {'name': 'author', 'title': 'Author'},
+        {'name': 'date_created', 'title': 'Date Created'},
+    )
+
+    # Loop the fields to add some extra data for the template
+    for field in fields:
+        # Is this the active field currently being sorted?
+        if order_by.replace('-', '', 1) == field['name']:
+            # If so add the direction arrow for if it's asc/desc
+            field['arrow'] = '&darr;' if order_by[0:1] == '-' else '&uarr;'
+
+            # Make the link the inverse of whatever the current sort direction is
+            order_prefix = '' if order_by[0:1] == '-' else '-'
+            field['link'] = request.path + '?order_by=' + order_prefix + field['name']
+
+        # If not just add the link default to asc
+        else:
+            field['link'] = request.path + '?order_by=' + field['name']
+
+    return render(request, 'cms/media/index.html', {
+        'title': 'Media',
+        'media': media,
+        'fields': fields,
+    })
 
 # Render the add/edit media form or handle saving it
 @login_required
