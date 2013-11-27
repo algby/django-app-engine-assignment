@@ -7,6 +7,7 @@ tinymce.init({
 	verify_html: false,
 	toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | addmedia',
 	extended_valid_elements: '*[*]',
+	relative_urls :false, // Stop TinyMCE messing up our urls!
 	setup: function(editor) {
 		editor.addButton('addmedia', {
 			text: 'Add Media',
@@ -54,7 +55,7 @@ $(window).load(function() {
 				var glyph;
 				var content;
 				results_html = '';
-				
+
 				// Loop through our result set
 				for (var id in results) {
 
@@ -108,7 +109,7 @@ $(window).load(function() {
 		}
 
 	});
-	
+
 	// Handle the pop up box used by the TinyMCE editor
 	$('#media-search-results').on('click', 'li a', function(e) {
 
