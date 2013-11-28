@@ -116,7 +116,7 @@ def media_add_or_edit(request, id=False):
             media_form = media_form if request.method == 'POST' else MediaForm()
             template_data = {'form': media_form, 'title': 'Add Media'}
 
-        else: 
+        else:
             raise PermissionDenied
 
     return render(request, 'cms/form.html', template_data)
