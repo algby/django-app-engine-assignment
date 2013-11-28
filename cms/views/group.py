@@ -39,7 +39,7 @@ def group(request):
             field['link'] = request.path + '?order_by=' + field['name']
 
     return render(request, 'cms/group/index.html', {
-        'title': 'Group',
+        'title': 'Groups',
         'groups': groups,
         'fields': fields,
     })
