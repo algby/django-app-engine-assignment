@@ -8,9 +8,44 @@ from api.models import CustomUser, CustomUserForm, CustomGroup
 # Render the cms user home page if the user is logged in
 @login_required
 def user(request):
-    users = CustomUser.objects.all()
+    # Get the order_by param from the request
+    order_by = request.GET.get('order_by', 'id')
 
-    return render(request, 'cms/user/index.html', {'title': 'Users', 'users': users})
+    # Get the user
+    users = CustomUser.objects.all().order_by(order_by)
+
+    # List of fields to display in the template, passing this over
+    # makes the template simpler
+    fields = (
+        {'name': 'id', 'title': 'ID'},
+        {'name': 'username', 'title': 'Username'},
+        {'name': 'first_name', 'title': 'First Name'},
+        {'name': 'last_name', 'title': 'Last Name'},
+        {'name': 'email', 'title': 'Email'},
+        {'name': 'Groups', 'title': 'Groups', 'sortable': False},
+        {'name': 'date_joined', 'title': 'Date Joined'},
+    )
+
+    # Loop the fields to add some extra data for the template
+    for field in fields:
+        # Is this the active field currently being sorted?
+        if order_by.replace('-', '', 1) == field['name']:
+            # If so add the direction arrow for if it's asc/desc
+            field['arrow'] = '&darr;' if order_by[0:1] == '-' else '&uarr;'
+
+            # Make the link the inverse of whatever the current sort direction is
+            order_prefix = '' if order_by[0:1] == '-' else '-'
+            field['link'] = request.path + '?order_by=' + order_prefix + field['name']
+
+        # If not just add the link default to asc
+        else:
+            field['link'] = request.path + '?order_by=' + field['name']
+
+    return render(request, 'cms/user/index.html', {
+        'title': 'Users',
+        'users': users,
+        'fields': fields,
+    })
 
 # Render the add/edit user form or handle saving it
 @login_required

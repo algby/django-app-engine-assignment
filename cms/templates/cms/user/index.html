@@ -1,20 +1,25 @@
 {% extends 'cms/template.html' %}
 
 {% block content %}
-	
+
 	<a href="{% url 'user-add' %}" class="btn btn-success" style="margin-bottom: 20px;">Add New User</a>
 
 	{% if user %}
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<td>ID</td>
-					<td>Username</td>
-					<td>First Name</td>
-					<td>Last Name</td>
-					<td>Email</td>
-					<td>Groups</td>
-					<td>Date Joined</td>
+					{% for field in fields %}
+						<td>
+							{% if field.sortable == False %}
+								{{ field.title }}
+							{% else %}
+								{% if order_by == field.name %}{{ arrow|safe }}{% endif %}
+								<a href="{{ field.link }}">
+									{{ field.arrow|safe }} {{ field.title }}
+								</a>
+							{% endif %}
+						</td>
+					{% endfor %}
 					<td>Actions</td>
 				</tr>
 			</thead>
