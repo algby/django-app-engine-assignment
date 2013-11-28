@@ -53,6 +53,7 @@ class CustomGroup(Group):
 
 # Used to convert the Group model to a form in the cms
 class CustomGroupForm(forms.ModelForm):
+    # Only show our own permissions that prefixed with wina_ and not django's defaults
     permissions = forms.ModelMultipleChoiceField(
         Permission.objects.filter(codename__startswith='wina_'),
         widget=admin.widgets.FilteredSelectMultiple('permissions', False)
