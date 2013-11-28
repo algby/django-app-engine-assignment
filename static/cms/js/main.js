@@ -4,6 +4,7 @@ tinymce.init({
 	menubar: false, // Hide the menu bar
 	statusbar: false, // Hide the status bar
 	plugins: ['link'],
+	height: 750,
 	verify_html: false,
 	toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | addmedia',
 	extended_valid_elements: '*[*]',
