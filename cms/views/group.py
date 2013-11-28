@@ -2,15 +2,47 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 
 from api.models import CustomGroup, CustomGroupForm
 
 # Render the cms group home page if the user is logged in
 @login_required
 def group(request):
-    groups = CustomGroup.objects.all().order_by('id')
+    # Get the order_by param from the request
+    order_by = request.GET.get('order_by', 'id')
 
-    return render(request, 'cms/group/index.html', {'title': 'Groups', 'groups': groups})
+    # Get the group
+    groups = CustomGroup.objects.annotate(members=Count('user')).all().order_by(order_by)
+
+    # List of fields to display in the template, passing this over
+    # makes the template simpler
+    fields = (
+        {'name': 'id', 'title': 'ID'},
+        {'name': 'name', 'title': 'Name'},
+        {'name': 'members', 'title': 'Members'},
+    )
+
+    # Loop the fields to add some extra data for the template
+    for field in fields:
+        # Is this the active field currently being sorted?
+        if order_by.replace('-', '', 1) == field['name']:
+            # If so add the direction arrow for if it's asc/desc
+            field['arrow'] = '&darr;' if order_by[0:1] == '-' else '&uarr;'
+
+            # Make the link the inverse of whatever the current sort direction is
+            order_prefix = '' if order_by[0:1] == '-' else '-'
+            field['link'] = request.path + '?order_by=' + order_prefix + field['name']
+
+        # If not just add the link default to asc
+        else:
+            field['link'] = request.path + '?order_by=' + field['name']
+
+    return render(request, 'cms/group/index.html', {
+        'title': 'Group',
+        'groups': groups,
+        'fields': fields,
+    })
 
 # Render the add/edit media form or handle saving it
 @login_required

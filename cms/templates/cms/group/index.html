@@ -1,16 +1,21 @@
 {% extends 'cms/template.html' %}
 
 {% block content %}
-	
+
 	<a href="{% url 'group-add' %}" class="btn btn-success" style="margin-bottom: 20px;">Add New Group</a>
 
 	{% if groups %}
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<td>ID</td>
-					<td>Name</td>
-					<td>Members</td>
+					{% for field in fields %}
+						<td>
+							{% if order_by == field.name %}{{ arrow|safe }}{% endif %}
+							<a href="{{ field.link }}">
+								{{ field.arrow|safe }} {{ field.title }}
+							</a>
+						</td>
+					{% endfor %}
 					<td>Actions</td>
 				</tr>
 			</thead>
@@ -24,7 +29,7 @@
 						<a href="{% url 'group-view' id=group.id %}">{{ group.name }}</a>
 					</td>
 					<td>
-						{{ group.user_set.count }}
+						{{ group.members }}
 					</td>
 					<td>
 						<a href="{% url 'group-view' id=group.id %}" type="button" class="btn btn-info">View</a>
