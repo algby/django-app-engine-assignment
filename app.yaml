@@ -11,6 +11,8 @@ handlers:
 # Reference to the application variable in wina/wsgi.py
 - url: .*
   script: wina.wsgi.application
+  # Force https for added security, particuarly important for the API
+  secure: always
 
 libraries:
 - name: django
