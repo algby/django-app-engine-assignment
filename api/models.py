@@ -2,6 +2,8 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib import admin
+from google.appengine.api import search
+from datetime import datetime
 
 MEDIA_TYPES = (
     ('audio', 'audio'),
@@ -79,8 +81,28 @@ class Media(models.Model):
             ('wina_delete_any_media', 'Allowed to delete any Media'),
         )
 
-    def __unicode__(self):
-        return self.title
+    def save(self, *args, **kwargs):
+        super(Media, self).save(*args, **kwargs)
+
+        # Create the search document
+        document = search.Document(
+            doc_id='media:%s' % self.id,
+            fields=[
+                search.AtomField(name='doc_type', value='media'),
+                search.AtomField(name='type', value=self.type),
+                search.TextField(name='title', value=self.title),
+                search.AtomField(name='content', value=self.content),
+                search.NumberField(name='author_id', value=self.author.id),
+                search.TextField(name='author_username', value=self.author.username),
+                search.TextField(name='author_first_name', value=self.author.first_name),
+                search.TextField(name='author_last_name', value=self.author.last_name),
+                search.DateField(name='date_created', value=datetime.now()),
+            ]
+        )
+
+        # Store it in our stories-and-media index
+        index = search.Index(name='stories-and-media')
+        index.put(document)
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
@@ -99,9 +121,11 @@ class MediaForm(forms.ModelForm):
         # Get the data that has already been passed through Django's validation
         cleaned_data = super(MediaForm, self).clean()
 
+        # Check the type is valid
         if cleaned_data['type'] in ['audio', 'video', 'image'] and cleaned_data['file'] is None:
             raise ValidationError('When the type is audio, video or image you must specify a file to upload')
 
+        # Check that when the text type is chosen some content is present
         elif cleaned_data['type'] == 'text' and cleaned_data['content'] == '':
             raise ValidationError('When the type is text you must specify content to upload')
 
@@ -123,6 +147,29 @@ class Story(models.Model):
             ('wina_delete_own_story', 'Allowed to delete own Story'),
             ('wina_delete_any_story', 'Allowed to delete any Story'),
         )
+
+    def save(self, *args, **kwargs):
+        super(Story, self).save(*args, **kwargs)
+
+        # Create the search document
+        document = search.Document(
+            doc_id='story:%s' % self.id,
+            fields=[
+                search.AtomField(name='doc_type', value='story'),
+                search.AtomField(name='type', value='story'),
+                search.TextField(name='title', value=self.title),
+                search.HtmlField(name='content', value=self.content),
+                search.NumberField(name='author_id', value=self.author.id),
+                search.TextField(name='author_username', value=self.author.username),
+                search.TextField(name='author_first_name', value=self.author.first_name),
+                search.TextField(name='author_last_name', value=self.author.last_name),
+                search.DateField(name='date_created', value=datetime.now()),
+            ]
+        )
+
+        # Store it in our stories-and-media index
+        index = search.Index(name='stories-and-media')
+        index.put(document)
 
 # Used to convert the Story model to a form in the cms
 class StoryForm(forms.ModelForm):
