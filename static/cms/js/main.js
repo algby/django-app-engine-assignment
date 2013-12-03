@@ -47,7 +47,7 @@ $(window).load(function() {
 			// a bit simpler. Also ensure the browser doesn't cache the response
 			// by appending a random query string to the request
 			$.ajax({
-				url: '/cms/media/search/ajax/' + query,
+				url: '/api/search?doc_type=media&query=' + query,
 				cache: false,
 				async: false
 			}).done(function(results) {
@@ -58,10 +58,10 @@ $(window).load(function() {
 				results_html = '';
 
 				// Loop through our result set
-				for (var id in results) {
+				for (var id in results.data) {
 
 					content = '';
-					result = results[id].fields;
+					result = results.data[id];
 
 					// Based on the content type append an appropriate icon and
 					// the source of the media element
