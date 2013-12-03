@@ -1,14 +1,39 @@
 from django.http import HttpResponse
 from django.utils.dateformat import format
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
 from google.appengine.api import search as gsearch
-from api.models import Media
+from modules.django_gcs_get_serving_url import get_serving_url
+from api.models import Media, MediaForm, CustomUser
 import json
 
 def index(request):
     return HttpResponse(json.dumps({'message': 'Welcome to the WINA API!'}), mimetype='application/json')
 
+# Helper to authenticate api users based on http headers
+def __authenticate_user(request):
+        username = request.META.get('HTTP_X_WINA_USERNAME', None)
+        password = request.META.get('HTTP_X_WINA_PASSWORD', None)
+        user = authenticate(username=username, password=password)
+
+        # Check that the user exists
+        if user is not None:
+            # Check that their account is still valid
+            if user.is_active:
+                return user
+
+            else:
+                raise Exception('Your account has been disabled')
+
+        else:
+            raise Exception('Your username and/or password were incorrect')
+
 # Slightly messy method that abstracts away the differences between search and db objects
 def __formatMediaOrStory(object, type='db_object'):
+    # Append the doc type for db objects as it isn't stored natively
+    if type == 'db_object':
+        object.doc_type = 'media' if object.type in ['image', 'audio', 'video'] else 'story'
+
     return {
         'id': object['id'] if type == 'search_object' else object.id,
         'title': object['title'] if type == 'search_object' else object.title,
@@ -24,20 +49,56 @@ def __formatMediaOrStory(object, type='db_object'):
         'date_created': int(format(object['date_created'] if type == 'search_object' else object.date_created, 'U')),
     }
 
-# Return all media as json
+# Return all media as json when a GET request is issued or when POST try and process an upload
+@csrf_exempt
 def media(request):
-    # Get all the media objects
-    media = Media.objects.all()
-
     # Set up a dict to return
     response = {
-        'message': None,
+        'error': None,
         'data': [],
     }
 
-    # Append all the media objects to the response object
-    for object in media:
-        response['data'].append(__formatMedia(object))
+    if request.method == 'POST':
+        try:
+            # Authenticate the api user
+            user = __authenticate_user(request)
+
+            # Check the user has sufficient permissions to add media
+            if user.has_perm('api.wina_add_media'):
+                media_form = MediaForm(request.POST, request.FILES)
+
+                # Check that the request passes validation
+                if media_form.is_valid():
+                    # Save the form data to the db
+                    media_form = media_form.save(commit=False)
+                    media_form.author = CustomUser.objects.get(id=user.id)
+
+                    # Is audio/video/image being submitted? If so we need to override content with the uploaded file url
+                    if media_form.type in ['audio', 'video', 'image']:
+                        media_form.content = get_serving_url(blob_key=request.FILES['file'].blob_key, file_name=request.FILES['file'].name)
+
+                    media_form.save()
+
+                    # And finally append the newly created media object to the return response
+                    response['data'].append(__formatMediaOrStory(media_form))
+
+                else:
+                    raise Exception('Invalid request')
+
+            else:
+                raise Exception('You do not have sufficient permisisons to do that')
+
+        except Exception as e:
+            response['message'] = str(e)
+
+    # Else assume it's a GET method and get all media
+    else:
+        # Get all the media objects
+        media = Media.objects.all()
+
+        # Append all the media objects to the response object
+        for object in media:
+            response['data'].append(__formatMediaOrStory(object))
 
     # Return the response as json
     return HttpResponse(json.dumps(response), mimetype='application/json')
@@ -49,8 +110,8 @@ def media_lookup(request, id):
 
     # Set up a dict to return
     response = {
-        'message': None,
-        'data': [__formatMedia(media)],
+        'error': None,
+        'data': [__formatMediaOrStory(media)],
     }
 
     # Return the response as json
