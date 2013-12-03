@@ -1,12 +1,8 @@
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core import serializers
 from django.core.exceptions import PermissionDenied
-
 from api.models import Media, MediaForm, CustomUser
-
 from modules.django_gcs_get_serving_url import get_serving_url
 
 # Render the cms media home page if the user is logged in
@@ -149,16 +145,6 @@ def media_delete(request, id):
 
     else:
         raise PermissionDenied
-
-# Handles searching Media and returning as JSON
-def media_search_ajax(request, query):
-    # Search for the Media objects
-    media = Media.objects.filter(title__icontains=query)
-
-    # Serialize the data as json
-    data = serializers.serialize('json', media)
-
-    return HttpResponse(data, mimetype='application/json')
 
 @login_required
 def media_search_tinymce(request):
