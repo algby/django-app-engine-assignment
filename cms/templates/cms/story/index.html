@@ -32,6 +32,9 @@
 						{{ story_object.author }}
 					</td>
 					<td>
+						<span class="label label-{% if story_object.status == 'draft' %}warning{% elif story_object.status == 'published' %}success{% endif %}">{{ story_object.status }}</span>
+					</td>
+					<td>
 						{{ story_object.date_created }}
 					</td>
 					<td>

@@ -12,6 +12,11 @@ MEDIA_TYPES = (
     ('image', 'image'),
 )
 
+STORY_STATUSES = (
+    ('draft', 'draft'),
+    ('published', 'published'),
+)
+
 class CustomUser(User):
     class Meta:
         proxy = True
@@ -137,6 +142,7 @@ class Story(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     author = models.ForeignKey(CustomUser)
+    status = models.CharField(max_length=9, choices=STORY_STATUSES, default='draft')
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -164,6 +170,7 @@ class Story(models.Model):
                 search.TextField(name='author_first_name', value=self.author.first_name),
                 search.TextField(name='author_last_name', value=self.author.last_name),
                 search.DateField(name='date_created', value=datetime.now()),
+                search.AtomField(name='status', value=self.status),
             ]
         )
 

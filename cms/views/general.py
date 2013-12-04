@@ -17,12 +17,18 @@ def index(request):
     user_count = CustomUser.objects.count()
     group_count = CustomGroup.objects.count()
 
+    # Get the count for story statuses
+    published_count = Story.objects.filter(status='published').count()
+    draft_count = Story.objects.filter(status='draft').count()
+
     return render(request, 'cms/index.html', {
         'title': 'Welcome, %s' % request.user.first_name,
         'media_count': media_count,
         'story_count': story_count,
         'user_count': user_count,
         'group_count': group_count,
+        'published_count': published_count,
+        'draft_count': draft_count,
     })
 
 # Log out the user and redirect to them to /

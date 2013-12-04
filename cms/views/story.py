@@ -20,6 +20,7 @@ def story(request):
         {'name': 'id', 'title': 'ID'},
         {'name': 'title', 'title': 'Title'},
         {'name': 'author', 'title': 'Author'},
+        {'name': 'status', 'title': 'Status'},
         {'name': 'date_created', 'title': 'Date Created'},
     )
 
