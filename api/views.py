@@ -47,6 +47,7 @@ def __formatMediaOrStory(object, type='db_object'):
             'last_name': object['author_last_name'] if type == 'search_object' else object.author.last_name,
         },
         'date_created': int(format(object['date_created'] if type == 'search_object' else object.date_created, 'U')),
+        'slug': object['slug'] if type == 'search_object' else object.slug,
     }
 
 # Return all media as json when a GET request is issued or when POST try and process an upload
