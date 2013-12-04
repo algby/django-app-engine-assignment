@@ -88,6 +88,7 @@ class Media(models.Model):
             ('wina_delete_any_media', 'Allowed to delete any Media'),
         )
 
+    # Override the save method
     def save(self, *args, **kwargs):
         # Slugify the title
         self.slug = slugify(self.title)
@@ -114,6 +115,14 @@ class Media(models.Model):
         # Store it in our stories-and-media index
         index = search.Index(name='stories-and-media')
         index.put(document)
+
+    # Override the delete method so we can remove docs from the search index
+    def delete(self, *args, **kwargs):
+        super(Media, self).delete(*args, **kwargs)
+
+        # Delete the entry from the stories-and-media index
+        index = search.Index(name='stories-and-media')
+        index.delete('media:%s' % self.id)
 
 # Used to convert the media model to a form in the cms
 class MediaForm(forms.ModelForm):
@@ -161,6 +170,7 @@ class Story(models.Model):
             ('wina_delete_any_story', 'Allowed to delete any Story'),
         )
 
+    # Override the save method
     def save(self, *args, **kwargs):
         # Slugify the title
         self.slug = slugify(self.title)
@@ -188,6 +198,16 @@ class Story(models.Model):
         # Store it in our stories-and-media index
         index = search.Index(name='stories-and-media')
         index.put(document)
+
+    # Override the delete method so we can remove docs from the search index
+    def delete(self, *args, **kwargs):
+        id = self.id
+
+        super(Story, self).delete(*args, **kwargs)
+
+        # Delete the entry from the stories-and-media index
+        index = search.Index(name='stories-and-media')
+        index.delete('story:%s' % id)
 
 # Used to convert the Story model to a form in the cms
 class StoryForm(forms.ModelForm):
