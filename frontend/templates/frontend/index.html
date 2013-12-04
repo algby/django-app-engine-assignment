@@ -1,0 +1,17 @@
+{% extends 'frontend/template.html' %}
+
+{% block content %}
+
+	<h1>Trending Stories</h1>
+	<hr/>
+	{% for story in stories %}
+
+		<article>
+			<h3><a href="{% url 'story-view' slug=story.slug id=story.id %}" title="{{ story.title }}">{{ story.title }}</a></h3>
+			<span class="label label-default">By {{ story.author.first_name }} {{ story.author.last_name }} on {{ story.date_created }}</span>
+		</article>
+		<hr/>
+
+	{% endfor %}
+
+{% endblock content %}

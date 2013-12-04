@@ -1,0 +1,15 @@
+body {
+	padding-top: 70px;
+}
+
+.wina-nav {
+	background-color: #4d6494;
+}
+
+.navbar-default .navbar-nav > li > a {
+	color: #f0f6ff;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	color: #fff;
+}

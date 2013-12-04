@@ -1,0 +1,16 @@
+{% extends 'frontend/template.html' %}
+
+{% block content %}
+
+	<article>
+		<header>
+			<h1>{{ story.title }}</h1>
+		</header>
+		<hr/>
+		<span class="label label-default">By {{ story.author.first_name }} {{ story.author.last_name }} on {{ story.date_created }}</span>
+		<hr/>
+
+		{{ story.content|safe }}
+	</article>
+
+{% endblock content %}
