@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib import admin
+from django.template.defaultfilters import slugify
 from google.appengine.api import search
 from datetime import datetime
 
@@ -76,6 +77,7 @@ class Media(models.Model):
     content = models.TextField(blank=True)
     author = models.ForeignKey(CustomUser)
     date_created = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField()
 
     class Meta:
         permissions = (
@@ -87,6 +89,9 @@ class Media(models.Model):
         )
 
     def save(self, *args, **kwargs):
+        # Slugify the title
+        self.slug = slugify(self.title)
+
         super(Media, self).save(*args, **kwargs)
 
         # Create the search document
@@ -102,6 +107,7 @@ class Media(models.Model):
                 search.TextField(name='author_first_name', value=self.author.first_name),
                 search.TextField(name='author_last_name', value=self.author.last_name),
                 search.DateField(name='date_created', value=datetime.now()),
+                search.AtomField(name='slug', value=self.slug),
             ]
         )
 
@@ -116,7 +122,7 @@ class MediaForm(forms.ModelForm):
     class Meta:
         model = Media
         # Don't show the date created field because we want that to be set automatically
-        exclude = ('date_created', 'author',)
+        exclude = ('date_created', 'author', 'slug',)
 
     # Custom validation
     def clean(self):
@@ -143,6 +149,7 @@ class Story(models.Model):
     content = models.TextField()
     author = models.ForeignKey(CustomUser)
     status = models.CharField(max_length=9, choices=STORY_STATUSES, default='draft')
+    slug = models.SlugField()
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -155,6 +162,9 @@ class Story(models.Model):
         )
 
     def save(self, *args, **kwargs):
+        # Slugify the title
+        self.slug = slugify(self.title)
+
         super(Story, self).save(*args, **kwargs)
 
         # Create the search document
@@ -171,6 +181,7 @@ class Story(models.Model):
                 search.TextField(name='author_last_name', value=self.author.last_name),
                 search.DateField(name='date_created', value=datetime.now()),
                 search.AtomField(name='status', value=self.status),
+                search.AtomField(name='slug', value=self.slug),
             ]
         )
 
@@ -183,4 +194,4 @@ class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
         # Don't show the date created field because we want that to be set automatically
-        exclude = ('date_created', 'author',)
+        exclude = ('date_created', 'author', 'slug',)
