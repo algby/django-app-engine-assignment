@@ -1,47 +1,45 @@
-// TinyMCE Setup and Configuration
-tinymce.init({
-	selector: 'textarea',
-	menubar: false, // Hide the menu bar
-	statusbar: false, // Hide the status bar
-	plugins: ['link'],
-	height: 750,
-	verify_html: false,
-	toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | addmedia',
-	extended_valid_elements: '*[*]',
-	relative_urls :false, // Stop TinyMCE messing up our urls!
-	setup: function(editor) {
-		editor.addButton('addmedia', {
-			text: 'Add Media',
-			icon: false,
-			onclick: function() {
-				editor.windowManager.open({
-					title: 'Media Search',
-					file: '/cms/media/search/tinymce',
-					width: 320,
-					height: 240
-				});
-			}
-		});
-	}
-});
-// End TinyMCE
-
 // Code reliant on jQuery and the DOM being ready
-$(window).load(function() {
+$(document).ready(function() {
+
+	// TinyMCE Setup and Configuration
+	tinymce.init({
+		selector: 'textarea',
+		menubar: false, // Hide the menu bar
+		statusbar: false, // Hide the status bar
+		plugins: ['link'],
+		height: 750,
+		verify_html: false,
+		toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | selectmedia',
+		extended_valid_elements: '*[*]',
+		relative_urls :false, // Stop TinyMCE messing up our urls!
+		setup: function(editor) {
+			editor.addButton('selectmedia', {
+				text: 'Select Media',
+				icon: false,
+				onclick: function() {
+					editor.windowManager.open({
+						title: 'Media Search',
+						file: '/cms/media/search/tinymce?title=' + $('#id_title').val(),
+						width: 320,
+						height: 240
+					});
+				}
+			});
+		}
+	});
+	// End TinyMCE
 
 	// Init the select2 jQuery plugin
 	$('select').select2({width: 'resolve'});
 
 	// Handle the AJAX based search widget used by the TinyMCE editor
-	$('#media-search-ui').on('keyup', function(e) {
+	function searchMedia(query) {
 
-		var $this = $(this);
-		var query = $this.val();
 		var $results = $('#media-search-results');
 		var results_html;
 
 		// Ensure we actually have something to search for
-		if (query.length > 0) {
+		if (typeof query != 'undefined' && query.length > 0) {
 
 			// Submit the AJAX requset, but not asynchornously to make this
 			// a bit simpler. Also ensure the browser doesn't cache the response
@@ -109,7 +107,20 @@ $(window).load(function() {
 
 		}
 
+	}
+
+	// Cache the media search ui selector for performance
+	$media_search_ui = $('#media-search-ui');
+
+	// Search media on keyup
+	$media_search_ui.on('keyup', function(e) {
+
+		searchMedia($(this).val());
+
 	});
+
+	// Run a search initially with the page title
+	searchMedia($media_search_ui.val());
 
 	// Handle the pop up box used by the TinyMCE editor
 	$('#media-search-results').on('click', 'li a', function(e) {
