@@ -1,12 +1,13 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from cms.helpers import can_access_cms
 from django.core.exceptions import PermissionDenied
 
 from api.models import CustomUser, CustomUserForm, CustomGroup
 
 # Render the cms user home page if the user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def user(request):
     # Get the order_by param from the request
     order_by = request.GET.get('order_by', 'id')
@@ -48,7 +49,7 @@ def user(request):
     })
 
 # Render the add/edit user form or handle saving it
-@login_required
+@user_passes_test(can_access_cms)
 def user_add_or_edit(request, id=False):
     current_user = request.user
 
@@ -125,14 +126,14 @@ def user_add_or_edit(request, id=False):
     return render(request, 'cms/form.html', template_data)
 
 # Handles retrieving a user object and returning it to the template
-@login_required
+@user_passes_test(can_access_cms)
 def user_view(request, id):
     user = CustomUser.objects.get(id=id)
 
     return render(request, 'cms/user/view.html', {'user': user, 'title': user.first_name + ' ' + user.last_name})
 
 # Handles activating another user if the current user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def user_activate(request, id):
     # Look up the user object and get the current user
     user = CustomUser.objects.get(id=id)
@@ -154,7 +155,7 @@ def user_activate(request, id):
         raise PermissionDenied
 
 # Handles deactivating another user if the current user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def user_deactivate(request, id):
     # Look up the user object and get the current user
     user = CustomUser.objects.get(id=id)

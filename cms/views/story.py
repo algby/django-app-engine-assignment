@@ -1,12 +1,13 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
 from api.models import Story, StoryForm, CustomUser
 
 # Render the cms story home page if the user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def story(request):
     # Get the order_by param from the request
     order_by = request.GET.get('order_by', 'id')
@@ -46,7 +47,7 @@ def story(request):
     })
 
 # Render the add/edit media form or handle saving it
-@login_required
+@user_passes_test(can_access_cms)
 def story_add_or_edit(request, id=False):
     user = request.user
 
@@ -115,7 +116,7 @@ def story_add_or_edit(request, id=False):
     return render(request, 'cms/form.html', template_data)
 
 # Handles retrieving a story object and returning it to the template
-@login_required
+@user_passes_test(can_access_cms)
 def story_view(request, id):
     story = Story.objects.get(id=id)
 
@@ -123,7 +124,7 @@ def story_view(request, id):
 
 
 # Handles deleting a piece of story if the user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def story_delete(request, id):
     user = request.user
 

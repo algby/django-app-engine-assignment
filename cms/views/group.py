@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
@@ -7,7 +8,7 @@ from django.db.models import Count
 from api.models import CustomGroup, CustomGroupForm
 
 # Render the cms group home page if the user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def group(request):
     # Get the order_by param from the request
     order_by = request.GET.get('order_by', 'id')
@@ -45,7 +46,7 @@ def group(request):
     })
 
 # Render the add/edit media form or handle saving it
-@login_required
+@user_passes_test(can_access_cms)
 def group_add_or_edit(request, id=False):
     user = request.user
 
@@ -108,7 +109,7 @@ def group_add_or_edit(request, id=False):
     return render(request, 'cms/form.html', template_data)
 
 # Handles retrieving a group object and returning it to the template
-@login_required
+@user_passes_test(can_access_cms)
 def group_view(request, id):
     group = CustomGroup.objects.get(id=id)
 

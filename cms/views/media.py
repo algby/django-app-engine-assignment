@@ -1,12 +1,13 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from api.models import Media, MediaForm, CustomUser
 from modules.django_gcs_get_serving_url import get_serving_url
 
 # Render the cms media home page if the user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def media(request):
     # Get the order_by param from the request
     order_by = request.GET.get('order_by', 'id')
@@ -46,7 +47,7 @@ def media(request):
     })
 
 # Render the add/edit media form or handle saving it
-@login_required
+@user_passes_test(can_access_cms)
 def media_add_or_edit(request, id=False):
     user = request.user
 
@@ -118,14 +119,14 @@ def media_add_or_edit(request, id=False):
     return render(request, 'cms/form.html', template_data)
 
 # Handles retrieving a media object and returning it to the template
-@login_required
+@user_passes_test(can_access_cms)
 def media_view(request, id):
     media = Media.objects.get(id=id)
 
     return render(request, 'cms/media/view.html', {'media': media, 'title': media.title})
 
 # Handles deleting a piece of media if the user is logged in
-@login_required
+@user_passes_test(can_access_cms)
 def media_delete(request, id):
     user = request.user
 
@@ -146,6 +147,6 @@ def media_delete(request, id):
     else:
         raise PermissionDenied
 
-@login_required
+@user_passes_test(can_access_cms)
 def media_search_tinymce(request):
     return render(request, 'cms/media/search/tinymce.html', {'no_padding': True})
