@@ -28,7 +28,7 @@ database_configs = {
 
 # Set the correct database host for the app
 if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-    DATABASES = {'default': database_configs['prod_data_sync']}
+    DATABASES = {'default': database_configs['production']}
 
 elif os.getenv('PROD_DATA_SYNC') == '1':
     DATABASES = {'default': database_configs['prod_data_sync']}
