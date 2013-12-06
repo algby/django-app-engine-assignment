@@ -35,9 +35,6 @@ urlpatterns = patterns('',
     url(r'^/group/add$', views.group_add_or_edit, name='group-add'),
     url(r'^/group/edit/(?P<id>\d+)$', views.group_add_or_edit, name='group-edit'),
 
-    # Search Media and Stories
-    url(r'^/search/(?P<query>.*)$', views.search, name='cms-search'),
-
     # Catch all route
     url(r'^$', views.index, name='cms-home')
 )
