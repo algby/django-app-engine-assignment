@@ -79,3 +79,6 @@ brief.pdf
 
 # GCS Demo stuff
 gcs/*
+
+# Ignore dev appengine data
+appengine_data
