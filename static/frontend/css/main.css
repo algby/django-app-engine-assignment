@@ -13,3 +13,82 @@ body {
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
 	color: #fff;
 }
+
+hr {
+	border-top: 1px solid #ddd;
+}
+
+.label-wina {
+	background-color: #4d6494;
+}
+
+.frontend-story h3 {
+	margin: 15px 0 10px 0;
+}
+
+.frontend-arrows {
+	text-align: center;
+	margin-right: 20px;
+}
+
+.fi-arrow-up {
+	color: #548854;
+}
+
+.fi-arrow-up:hover {
+	cursor: pointer;
+	color: #3f663f;
+}
+
+.fi-arrow-down {
+	color: #a72918;
+}
+
+.fi-arrow-down:hover {
+	cursor: pointer;
+	color: #862013;
+}
+
+.size-12 {
+	font-size: 12px;
+}
+
+.size-14 {
+	font-size: 14px;
+}
+
+.size-16 {
+	font-size: 16px;
+}
+
+.size-18 {
+	font-size: 18px;
+}
+
+.size-21 {
+	font-size: 21px;
+}
+
+.size-24 {
+	font-size: 24px;
+}
+
+.size-36 {
+	font-size: 36px;
+}
+
+.size-48 {
+	font-size: 48px;
+}
+
+.size-60 {
+	font-size: 60px;
+}
+
+.size-72 {
+	font-size: 72px;
+}
+
+footer.navbar {
+	margin-bottom: 0;
+}

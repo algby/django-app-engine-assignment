@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.template.defaultfilters import slugify
 from google.appengine.api import search
 from datetime import datetime
+from google.appengine.ext import ndb
 
 MEDIA_TYPES = (
     ('audio', 'audio'),
@@ -170,12 +171,71 @@ class Story(models.Model):
             ('wina_delete_any_story', 'Allowed to delete any Story'),
         )
 
+    def get_votes(self):
+        votes = StoryVote.get_by_id('StoryVote:%s' % self.id)
+        return {
+            'upvotes': votes.upvotes,
+            'downvotes': votes.downvotes,
+            'total': votes.total,
+        }
+
+    @ndb.transactional
+    def upvote(self):
+        votes = StoryVote.get_by_id('StoryVote:%s' % self.id)
+        votes.upvotes += 1
+        votes.total += 1
+        return votes.put()
+
+    @ndb.transactional
+    def downvote(self):
+        votes = StoryVote.get_by_id('StoryVote:%s' % self.id)
+        votes.downvotes += 1
+        votes.total -= 1
+        return votes.put()
+
+    def init_vote_entity(self):
+        story_vote = StoryVote(
+            id='StoryVote:%s' % self.id,
+            upvotes=0,
+            downvotes=0,
+            total=0,
+            status=self.status
+        )
+        return story_vote.put()
+
+    @ndb.transactional
+    def update_vote_status(self):
+        # Make sure the status is up to date in the datastore but keep the votes the same
+        votes = StoryVote.get_by_id('StoryVote:%s' % self.id)
+        votes = StoryVote(
+            id='StoryVote:%s' % self.id,
+            upvotes=votes.upvotes,
+            downvotes=votes.downvotes,
+            total=votes.total,
+            status=self.status
+        )
+        return votes.put()
+
     # Override the save method
     def save(self, *args, **kwargs):
         # Slugify the title
         self.slug = slugify(self.title)
 
+        # This will only run on the first creation of the model as we don't want to
+        # keep setting the vote counts to 0!
+        just_created = True if not self.pk else False
+
+        # Save it to the database
         super(Story, self).save(*args, **kwargs)
+
+        # This has to be run after the save so we have access to the id
+        if just_created:
+            # Create the initial StoryVote object in the datastore
+            self.init_vote_entity()
+
+        # Otherwise we can just update the status property
+        else:
+            self.update_vote_status()
 
         # Create the search document
         document = search.Document(
@@ -215,3 +275,9 @@ class StoryForm(forms.ModelForm):
         model = Story
         # Don't show the date created field because we want that to be set automatically
         exclude = ('date_created', 'author', 'slug',)
+
+class StoryVote(ndb.Model):
+    upvotes = ndb.IntegerProperty()
+    downvotes = ndb.IntegerProperty()
+    total = ndb.IntegerProperty()
+    status = ndb.StringProperty()
