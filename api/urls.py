@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from api import views
 
 urlpatterns = patterns('',
-    # Media Routes
+    # Media routes
     url(r'^/media$', views.media, name='api-media'),
     url(r'^/media/(?P<id>\d+)$', views.media_lookup, name='api-media-lookup'),
 
