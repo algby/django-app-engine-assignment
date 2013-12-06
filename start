@@ -1,0 +1,1 @@
+dev_appserver.py --datastore_path=appengine_data/datastore/data --blobstore_path=appengine_data/blobstore --search_indexes_path=appengine_data/search/data .
