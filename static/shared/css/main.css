@@ -1,0 +1,8 @@
+#add-media-form .form-content, #add-media-form .form-file {
+	display: none;
+}
+
+/* Select2 is bugs when trying to calculate the width sometimes, this 'fixes' it */
+.select2-container {
+	width: 300px !important;
+}
