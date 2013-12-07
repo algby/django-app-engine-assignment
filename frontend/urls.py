@@ -22,6 +22,9 @@ urlpatterns = patterns('',
     # Public user submission
     url(r'^submit$', views.submit, name='submit'),
 
-    # Catch all route
+    # Latest stories
+    url(r'^latest$', views.latest, name='latest'),
+
+    # Home Page
     url(r'^$', views.index, name='index')
 )

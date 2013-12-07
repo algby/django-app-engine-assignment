@@ -5,6 +5,7 @@ from django.contrib.auth import logout as logout_user
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from google.appengine.ext import blobstore
+from google.appengine.ext import ndb
 from api.models import Story, StoryVote, FrontEndUserForm, MediaForm, WinaUser
 from modules.django_gcs_get_serving_url import get_serving_url
 import json
@@ -42,7 +43,7 @@ def story_view(request, slug, id):
     })
 
 def index(request):
-    # Get the top 20 stories with the highest vote count
+    # Get the top 10 stories with the highest vote count
     story_votes = StoryVote.query(StoryVote.status == 'published').order(-StoryVote.total).fetch(10)
 
     # Used to store all the ids needed for the sql query
@@ -63,7 +64,7 @@ def index(request):
     # Query for the full story object from the database
     db_stories = Story.objects.filter(pk__in=ids, status='published')
 
-    # Due to the limitations in django tempaltes we need to combine the lists here
+    # Due to the limitations in django templates we need to combine the lists here
     stories = []
     for story in db_stories:
         stories.append({
@@ -74,8 +75,50 @@ def index(request):
     # Now we have the story objects out the db we need to resort them
     stories = sorted(stories, key=lambda x: x['votes']['total'], reverse=True)
 
-    return render(request, 'frontend/index.html', {
+    return render(request, 'frontend/stories.html', {
         'title': 'Home',
+        'page_title': 'Trending Stories',
+        'stories': stories,
+    })
+
+def latest(request):
+    # Query for the full story object from the database
+    db_stories = Story.objects.filter(status='published').order_by('date_created')[:10]
+
+    # Used to store all the keys needed for the datastore query
+    keys = []
+
+    for story in db_stories:
+        keys.append(ndb.Key('StoryVote', 'StoryVote:%s' % story.id))
+
+    # Get the 10 stories based on the ids we pulled from the db
+    story_votes = ndb.get_multi(keys)
+
+    # Used to provide a way to easily access the vote data for a story in the template
+    votes = {}
+
+    for story in story_votes:
+        id = story.key.id().split(':')[1]
+        votes[id] = {
+            'upvotes': story.upvotes,
+            'downvotes': story.downvotes,
+            'total': story.total,
+        }
+
+    # Due to the limitations in django templates we need to combine the lists here
+    stories = []
+    for story in db_stories:
+        stories.append({
+            'story': story,
+            'votes': votes[str(story.id)]
+        })
+
+    # Sort them by date in asc order again, damn it python..
+    stories = sorted(stories, key=lambda x: x['story'].date_created, reverse=True)
+
+    return render(request, 'frontend/stories.html', {
+        'title': 'Latest',
+        'page_title': 'Latest Stories',
         'stories': stories,
     })
 
