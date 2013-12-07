@@ -4,7 +4,7 @@ from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
-from api.models import Story, StoryForm, CustomUser
+from api.models import Story, StoryForm, WinaUser
 
 # Render the cms story home page if the user is logged in
 @user_passes_test(can_access_cms)
@@ -80,7 +80,7 @@ def story_add_or_edit(request, id=False):
         if story_form.is_valid():
             # Save the form data to the db
             form = story_form.save(commit=False)
-            form.author = CustomUser.objects.get(id=request.user.id)
+            form.author = WinaUser.objects.get(id=request.user.id)
             form.save()
 
             # Show a success message to the user

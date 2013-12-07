@@ -1,15 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotFound
+from django.contrib.auth import logout as logout_user
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from google.appengine.ext import blobstore
-from api.models import Story, StoryVote
+from api.models import Story, StoryVote, FrontEndUserForm, MediaForm, WinaUser
+from modules.django_gcs_get_serving_url import get_serving_url
 import json
-
-# Helper for the vote action
-def __return_json_error(self, error_message):
-    return HttpResponse(json.dumps({
-        'error': error_message,
-        'data': [],
-    }), mimetype='application/json')
 
 def blob_view(request, blob_key):
     # Try and retrieve the blob
@@ -125,3 +123,71 @@ def vote(request):
     except:
         response['error'] = 'Error adding vote to story'
         return HttpResponse(json.dumps(response), mimetype='application/json')
+
+def join(request):
+    # Is it a POST request, i.e is the form being submitted
+    if request.method == 'POST':
+        user_form = FrontEndUserForm(request.POST)
+
+        # Run through any validation rules we have
+        if user_form.is_valid():
+            # Save the form data to the db
+            user = user_form.save()
+
+            # Show a success message to the user
+            messages.success(request, 'Account successfully created!')
+
+            # Log the user in!
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+
+            # Redirect them back to the user home page
+            return redirect('/')
+
+    form = user_form if request.method == 'POST' else FrontEndUserForm()
+
+    return render(request, 'frontend/form.html', {
+        'title': 'Join',
+        'submit': 'Create Account',
+        'form': form,
+    })
+
+@login_required
+def logout(request):
+    # Logout the user
+    logout_user(request)
+
+    # Redirect them to the home page
+    return redirect('/')
+
+@login_required
+def submit(request):
+    # Is it a POST request, i.e is the form being submitted
+    if request.method == 'POST':
+        form = MediaForm(request.POST, request.FILES)
+
+        # Run through any validation rules we have
+        if form.is_valid():
+            # Save the form data to the db
+            form = form.save(commit=False)
+            form.author = WinaUser.objects.get(id=request.user.id)
+
+            # Is audio/video/image being submitted? If so we need to override content
+            if form.type in ['audio', 'video', 'image']:
+                form.content = get_serving_url(blob_key=request.FILES['file'].blob_key, file_name=request.FILES['file'].name)
+
+            form.save()
+
+            # Show a success message to the user
+            messages.success(request, 'Submission recieved, thank you!')
+
+            # Redirect them back to the media home page
+            return redirect('/')
+
+    form = form if request.method == 'POST' else MediaForm()
+
+    return render(request, 'frontend/form.html', {
+        'title': 'Media Submission',
+        'form': form,
+        'submit': 'Submit',
+    })

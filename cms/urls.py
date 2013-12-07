@@ -2,10 +2,6 @@ from django.conf.urls import patterns, url
 from cms import views
 
 urlpatterns = patterns('',
-    # Authentication Routes
-    url(r'^/login$', 'django.contrib.auth.views.login', {'template_name': 'cms/auth/login.html'}, name='login'),
-    url(r'^/logout$', views.logout, name='logout'),
-
     # Media Routes
     url(r'^/media$', views.media, name='media-home'),
     url(r'^/media/view/(?P<id>\d+)$', views.media_view, name='media-view'),

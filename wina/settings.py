@@ -105,7 +105,7 @@ FILE_UPLOAD_HANDLERS = (
 FILE_UPLOAD_MAX_MEMORY_SIZE = 9999999999
 
 # Login URL for the CMS module
-LOGIN_URL = '/cms/login'
+LOGIN_URL = '/login'
 
 # Where to default to sending the user after login
 LOGIN_REDIRECT_URL = '/cms'

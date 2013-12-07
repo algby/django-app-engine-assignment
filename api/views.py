@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from google.appengine.api import search as gsearch
 from modules.django_gcs_get_serving_url import get_serving_url
-from api.models import Media, MediaForm, CustomUser
+from api.models import Media, MediaForm, WinaUser
 import json
 
 def index(request):
@@ -72,7 +72,7 @@ def media(request):
                 if media_form.is_valid():
                     # Save the form data to the db
                     media_form = media_form.save(commit=False)
-                    media_form.author = CustomUser.objects.get(id=user.id)
+                    media_form.author = WinaUser.objects.get(id=user.id)
 
                     # Is audio/video/image being submitted? If so we need to override content with the uploaded file url
                     if media_form.type in ['audio', 'video', 'image']:

@@ -31,9 +31,9 @@
 					<li><a href="{% url 'group-home' %}">Groups</a></li>
 				</ul>
 
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="{% url 'logout' %}">Log Out</a></li>
-				</ul>
+				<p class="navbar-text navbar-right">
+					{{ user.first_name }} {{ user.last_name }} | <a href="{% url 'logout' %}">Log Out</a>
+				</p>
 			</div>
 		</div>
 	</div>

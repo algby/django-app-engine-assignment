@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 
-from api.models import CustomGroup, CustomGroupForm
+from api.models import WinaGroup, WinaGroupForm
 
 # Render the cms group home page if the user is logged in
 @user_passes_test(can_access_cms)
@@ -14,7 +14,7 @@ def group(request):
     order_by = request.GET.get('order_by', 'id')
 
     # Get the group
-    groups = CustomGroup.objects.annotate(members=Count('user')).all().order_by(order_by)
+    groups = WinaGroup.objects.annotate(members=Count('user')).all().order_by(order_by)
 
     # List of fields to display in the template, passing this over
     # makes the template simpler
@@ -57,8 +57,8 @@ def group_add_or_edit(request, id=False):
         if id is not False:
             # Check the user has valid permissions to edit a group
             if user.has_perm('auth.wina_edit_group'):
-                group = CustomGroup.objects.get(id=id)
-                group_form = CustomGroupForm(request.POST, instance=group)
+                group = WinaGroup.objects.get(id=id)
+                group_form = WinaGroupForm(request.POST, instance=group)
 
             else:
                 raise PermissionDenied
@@ -68,7 +68,7 @@ def group_add_or_edit(request, id=False):
         else:
             # Check the user has valid permissions to add a group
             if user.has_perm('auth.wina_add_group'):
-                group_form = CustomGroupForm(request.POST)
+                group_form = WinaGroupForm(request.POST)
 
             else:
                 raise PermissionDenied
@@ -89,8 +89,8 @@ def group_add_or_edit(request, id=False):
     if id is not False:
         # Check the user has valid permissions to edit a group
         if user.has_perm('auth.wina_edit_group'):
-            group = CustomGroup.objects.get(id=id)
-            group_form = group_form if request.method == 'POST' else CustomGroupForm(instance=group)
+            group = WinaGroup.objects.get(id=id)
+            group_form = group_form if request.method == 'POST' else WinaGroupForm(instance=group)
             template_data = {'form': group_form, 'title': group.name}
 
         else:
@@ -100,7 +100,7 @@ def group_add_or_edit(request, id=False):
     else:
         # Check the user has valid permissions to add a group
         if user.has_perm('auth.wina_add_group'):
-            group_form = group_form if request.method == 'POST' else CustomGroupForm()
+            group_form = group_form if request.method == 'POST' else WinaGroupForm()
             template_data = {'form': group_form, 'title': 'Add Group'}
 
         else:
@@ -111,6 +111,6 @@ def group_add_or_edit(request, id=False):
 # Handles retrieving a group object and returning it to the template
 @user_passes_test(can_access_cms)
 def group_view(request, id):
-    group = CustomGroup.objects.get(id=id)
+    group = WinaGroup.objects.get(id=id)
 
     return render(request, 'cms/group/view.html', {'group': group, 'title': group.name})

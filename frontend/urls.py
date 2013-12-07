@@ -12,6 +12,16 @@ urlpatterns = patterns('',
     # Vote on a story
     url(r'^vote$', views.vote, name='story-vote'),
 
+    # Public user sign up
+    url(r'^join$', views.join, name='join'),
+
+    # User login
+    url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'frontend/login.html'}, name='login'),
+    url(r'^logout$', views.logout, name='logout'),
+
+    # Public user submission
+    url(r'^submit$', views.submit, name='submit'),
+
     # Catch all route
     url(r'^$', views.index, name='index')
 )

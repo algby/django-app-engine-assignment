@@ -3,8 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from cms.helpers import can_access_cms
 from django.core.exceptions import PermissionDenied
-
-from api.models import CustomUser, CustomUserForm, CustomGroup
+from api.models import WinaUser, CmsUserForm, WinaGroup
 
 # Render the cms user home page if the user is logged in
 @user_passes_test(can_access_cms)
@@ -13,7 +12,7 @@ def user(request):
     order_by = request.GET.get('order_by', 'id')
 
     # Get the user
-    users = CustomUser.objects.all().order_by(order_by)
+    users = WinaUser.objects.all().order_by(order_by)
 
     # List of fields to display in the template, passing this over
     # makes the template simpler
@@ -58,11 +57,11 @@ def user_add_or_edit(request, id=False):
         # If the id is not false then we are editing, so we need to
         # get an instance of that user first
         if id is not False:
-            user = CustomUser.objects.get(id=id)
+            user = WinaUser.objects.get(id=id)
 
             # Check the has valid permissions to edit this user
             if current_user.has_perm('auth.wina_edit_any_user') or (current_user.id == user.id and current_user.has_perm('auth.wina_edit_own_user')):
-                user_form = CustomUserForm(request.POST, instance=user)
+                user_form = CmsUserForm(request.POST, instance=user)
 
             else:
                 raise PermissionDenied
@@ -72,7 +71,7 @@ def user_add_or_edit(request, id=False):
         else:
             # Check the user has valid permissions to add user
             if current_user.has_perm('auth.wina_add_user'):
-                user_form = CustomUserForm(request.POST)
+                user_form = CmsUserForm(request.POST)
 
             else:
                 raise PermissionDenied
@@ -92,7 +91,7 @@ def user_add_or_edit(request, id=False):
             # If so add the user to that group
             if group_ids:
                 for group_id in group_ids:
-                    user.groups.add(CustomGroup.objects.get(id=group_id))
+                    user.groups.add(WinaGroup.objects.get(id=group_id))
 
             # Show a success message to the user
             message_suffix = 'added!' if id is False else 'edited'
@@ -103,11 +102,11 @@ def user_add_or_edit(request, id=False):
 
     # Were we passed the id? i.e are we editing an object, if so get it to pass to the template
     if id is not False:
-        user = CustomUser.objects.get(id=id)
+        user = WinaUser.objects.get(id=id)
 
         # Check the user has valid permissions to edit this user
         if current_user.has_perm('auth.wina_edit_any_user') or (current_user.id == user.id and current_user.has_perm('auth.wina_edit_own_user')):
-            user_form = user_form if request.method == 'POST' else CustomUserForm(instance=user)
+            user_form = user_form if request.method == 'POST' else CmsUserForm(instance=user)
             template_data = {'form': user_form, 'title': user.first_name + ' ' + user.last_name}
 
         else:
@@ -117,7 +116,7 @@ def user_add_or_edit(request, id=False):
     else:
         # Check the user has valid permissions to add a user
         if current_user.has_perm('auth.wina_add_user'):
-            user_form = user_form if request.method == 'POST' else CustomUserForm()
+            user_form = user_form if request.method == 'POST' else CmsUserForm()
             template_data = {'form': user_form, 'title': 'Add User'}
 
         else:
@@ -128,7 +127,7 @@ def user_add_or_edit(request, id=False):
 # Handles retrieving a user object and returning it to the template
 @user_passes_test(can_access_cms)
 def user_view(request, id):
-    user = CustomUser.objects.get(id=id)
+    user = WinaUser.objects.get(id=id)
 
     return render(request, 'cms/user/view.html', {'user': user, 'title': user.first_name + ' ' + user.last_name})
 
@@ -136,7 +135,7 @@ def user_view(request, id):
 @user_passes_test(can_access_cms)
 def user_activate(request, id):
     # Look up the user object and get the current user
-    user = CustomUser.objects.get(id=id)
+    user = WinaUser.objects.get(id=id)
     current_user = request.user
 
     # Check the user has valid permissions to delete this story
@@ -158,7 +157,7 @@ def user_activate(request, id):
 @user_passes_test(can_access_cms)
 def user_deactivate(request, id):
     # Look up the user object and get the current user
-    user = CustomUser.objects.get(id=id)
+    user = WinaUser.objects.get(id=id)
     current_user = request.user
 
     # Check the user has valid permissions to delete this story

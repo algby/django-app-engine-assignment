@@ -19,7 +19,7 @@ STORY_STATUSES = (
     ('published', 'published'),
 )
 
-class CustomUser(User):
+class WinaUser(User):
     class Meta:
         proxy = True
         permissions = (
@@ -31,27 +31,46 @@ class CustomUser(User):
         )
 
 # Used to convert the User model to a form in the cms
-class CustomUserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-
+class CmsUserForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
+        model = WinaUser
         # There's more fields we want to exclude than include so just list the ones we want
-        fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups', 'is_staff']
+        fields = ['username', 'first_name', 'last_name', 'email', 'groups', 'is_staff', 'is_superuser', 'is_active']
 
     # Override the save method to add our custom fields in correctly
     def save(self, commit=True):
-        user_form = super(CustomUserForm, self).save(commit=False)
+        user_form = super(CmsUserForm, self).save(commit=False)
 
-        # Save the users password, this automatically hashes it
-        user_form.set_password(user_form.password)
+        # Update the users password if it was set, this automatically hashes it
+        if user_form.password != u'':
+            user_form.set_password(user_form.password)
 
         if commit:
             user_form.save()
 
         return user_form
 
-class CustomGroup(Group):
+# Used to convert the User model to a form on the frontend
+class FrontEndUserForm(forms.ModelForm):
+    class Meta:
+        model = WinaUser
+        # There's more fields we want to exclude than include so just list the ones we want
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+
+    # Override the save method to add our custom fields in correctly
+    def save(self, commit=True):
+        user_form = super(FrontEndUserForm, self).save(commit=False)
+
+        # Update the users password if it was set, this automatically hashes it
+        if user_form.password != u'':
+            user_form.set_password(user_form.password)
+
+        if commit:
+            user_form.save()
+
+        return user_form
+
+class WinaGroup(Group):
     class Meta:
         proxy = True
         permissions = (
@@ -61,7 +80,7 @@ class CustomGroup(Group):
         )
 
 # Used to convert the Group model to a form in the cms
-class CustomGroupForm(forms.ModelForm):
+class WinaGroupForm(forms.ModelForm):
     # Only show our own permissions that prefixed with wina_ and not django's defaults
     permissions = forms.ModelMultipleChoiceField(
         Permission.objects.filter(codename__startswith='wina_'),
@@ -69,14 +88,14 @@ class CustomGroupForm(forms.ModelForm):
     )
 
     class Meta:
-        model = CustomGroup
+        model = WinaGroup
 
 # Used for uploading media that forms part of a story
 class Media(models.Model):
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=5, choices=MEDIA_TYPES)
     content = models.TextField(blank=True)
-    author = models.ForeignKey(CustomUser)
+    author = models.ForeignKey(WinaUser)
     date_created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField()
 
@@ -157,7 +176,7 @@ class MediaForm(forms.ModelForm):
 class Story(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    author = models.ForeignKey(CustomUser)
+    author = models.ForeignKey(WinaUser)
     status = models.CharField(max_length=9, choices=STORY_STATUSES, default='draft')
     slug = models.SlugField()
     date_created = models.DateTimeField(auto_now_add=True)

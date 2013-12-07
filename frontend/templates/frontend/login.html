@@ -1,0 +1,26 @@
+{% extends 'frontend/template.html' %}
+
+{% block content %}
+
+<h1>Log In</h1>
+<hr/>
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+
+	<!-- Display validation errors if there were any -->
+	{% if form.errors %}
+		<div class="alert alert-danger">Your username and password didn't match. Please try again.</div>
+	{% endif %}
+
+	<!-- For preventing cross site request forgery attacks -->
+	{% csrf_token %}
+
+	<p>{{ form.username }}</p>
+	<p>{{ form.password }}</p>
+
+	<button class="btn btn-success" type="submit">Log in</button>
+	<input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}"/>
+
+</form>
+
+{% endblock content %}

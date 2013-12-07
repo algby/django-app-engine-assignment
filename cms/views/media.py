@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import user_passes_test
 from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from api.models import Media, MediaForm, CustomUser
+from api.models import Media, MediaForm, WinaUser
 from modules.django_gcs_get_serving_url import get_serving_url
 
 # Render the cms media home page if the user is logged in
@@ -79,7 +79,7 @@ def media_add_or_edit(request, id=False):
         if media_form.is_valid():
             # Save the form data to the db
             media_form = media_form.save(commit=False)
-            media_form.author = CustomUser.objects.get(id=request.user.id)
+            media_form.author = WinaUser.objects.get(id=request.user.id)
 
             # Is audio/video/image being submitted? If so we need to override content
             if media_form.type in ['audio', 'video', 'image']:
