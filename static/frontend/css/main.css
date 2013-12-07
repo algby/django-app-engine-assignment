@@ -22,6 +22,10 @@ hr {
 	background-color: #4d6494;
 }
 
+.single-frontend-story {
+	padding-top: 20px;
+}
+
 .frontend-story h3 {
 	margin: 15px 0 10px 0;
 }
