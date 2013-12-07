@@ -32,6 +32,8 @@ class WinaUser(User):
 
 # Used to convert the User model to a form in the cms
 class CmsUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
     class Meta:
         model = WinaUser
         # There's more fields we want to exclude than include so just list the ones we want
@@ -52,6 +54,8 @@ class CmsUserForm(forms.ModelForm):
 
 # Used to convert the User model to a form on the frontend
 class FrontEndUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
     class Meta:
         model = WinaUser
         # There's more fields we want to exclude than include so just list the ones we want
