@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import user_passes_test
 from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-
 from api.models import Story, StoryForm, WinaUser
 
 # Render the cms story home page if the user is logged in

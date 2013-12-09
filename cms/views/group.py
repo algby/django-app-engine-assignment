@@ -4,7 +4,6 @@ from cms.helpers import can_access_cms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
-
 from api.models import WinaGroup, WinaGroupForm
 
 # Render the cms group home page if the user is logged in

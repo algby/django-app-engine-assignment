@@ -7,6 +7,7 @@ from modules.django_gcs_get_serving_url import get_serving_url
 from api.models import Story, StoryForm, Media, MediaForm, WinaUser
 import json
 
+# Default view
 def index(request):
     return HttpResponse(json.dumps({'message': 'Welcome to the WINA API!'}), mimetype='application/json')
 

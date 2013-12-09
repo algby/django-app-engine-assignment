@@ -1,3 +1,1 @@
-from django.db import models
-
-# Create your models here.
+# All models used by the cms are in api/models.py

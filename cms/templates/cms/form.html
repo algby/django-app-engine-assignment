@@ -2,47 +2,51 @@
 
 {% block content %}
 
-<form class="form-horizontal" id="{{ title|slugify|lower }}-form"method="post" enctype="multipart/form-data">
-	{% csrf_token %}
+	<form class="form-horizontal" id="{{ title|slugify|lower }}-form"method="post" enctype="multipart/form-data">
+		{% csrf_token %}
 
-	{% for error in form.non_field_errors %}
-		<p><span class="label label-danger">{{ error }}</span></p>
-	{% endfor %}
+		{% for error in form.non_field_errors %}
+			<p><span class="label label-danger">{{ error }}</span></p>
+		{% endfor %}
 
-	{% for field in form %}
-		<p>
-			{% if field.errors %}
-				<div class="control-group error form-{{ field.html_name }}">
-					<label class="control-label">{{ field.label }}</label>
-					<div class="controls">
-						{{ field }}
-						<span class="help-inline">
-							{% for error in field.errors %}
-								<span class="label label-danger">{{ error }}</span>
-							{% endfor %}
+		{% for field in form %}
+			<p>
+				{% if field.errors %}
+					<div class="control-group error form-{{ field.html_name }}">
+						<label class="control-label">{{ field.label }}</label>
+
+						<div class="controls">
+							{{ field }}
+							<span class="help-inline">
+								{% for error in field.errors %}
+									<span class="label label-danger">{{ error }}</span>
+								{% endfor %}
+
+								{% if field.help_text %}
+									<p class="help-inline"><small>{{ field.help_text }}</small></p>
+								{% endif %}
+							</span>
+						</div>
+					</div>
+				{% else %}
+					<div class="control-group form-{{ field.html_name }}">
+						<label class="control-label">{{ field.label }}</label>
+
+						<div class="controls">
+							{{ field }}
+
 							{% if field.help_text %}
 								<p class="help-inline"><small>{{ field.help_text }}</small></p>
 							{% endif %}
-						</span>
+						</div>
 					</div>
-				</div>
-			{% else %}
-				<div class="control-group form-{{ field.html_name }}">
-					<label class="control-label">{{ field.label }}</label>
-					<div class="controls">
-						{{ field }}
-						{% if field.help_text %}
-							<p class="help-inline"><small>{{ field.help_text }}</small></p>
-						{% endif %}
-					</div>
-				</div>
-			{% endif %}
-		</p>
-	{% endfor %}
+				{% endif %}
+			</p>
+		{% endfor %}
 
-	<div class="form-actions">
-		<button type="submit" class="btn btn-success" >Save</button>
-	</div>
-</form>
+		<div class="form-actions">
+			<button type="submit" class="btn btn-success" >Save</button>
+		</div>
+	</form>
 
 {% endblock content %}

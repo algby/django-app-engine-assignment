@@ -1,7 +1,6 @@
-from django.contrib import messages
-
+# Basic function to determine if the user is a staff member or not to
+# decide whether to allow them access to the cms. This is separated out
+# instead of just using a lambda to allow for more complex logic here in
+# the future!
 def can_access_cms(user):
-    # if not user.is_staff
-        # messages.success(request, 'derp')
-
     return user.is_staff
