@@ -63,7 +63,7 @@ def index(request):
         }
 
     # Query for the full story object from the database
-    db_stories = Story.objects.filter(pk__in=ids, status='published')
+    db_stories = Story.objects.filter(pk__in=ids, status='published').order_by('-date_created')
 
     # Due to the limitations in django templates we need to combine the lists here
     stories = []
@@ -84,7 +84,7 @@ def index(request):
 
 def latest(request):
     # Query for the full story object from the database
-    db_stories = Story.objects.filter(status='published').order_by('date_created')[:10]
+    db_stories = Story.objects.filter(status='published').order_by('-date_created')
 
     # Used to store all the keys needed for the datastore query
     keys = []
@@ -92,7 +92,7 @@ def latest(request):
     for story in db_stories:
         keys.append(ndb.Key('StoryVote', 'StoryVote:%s' % story.id))
 
-    # Get the 10 stories based on the ids we pulled from the db
+    # Get the stories based on the ids we pulled from the db
     story_votes = ndb.get_multi(keys)
 
     # Used to provide a way to easily access the vote data for a story in the template
