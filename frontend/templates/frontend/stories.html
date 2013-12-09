@@ -18,7 +18,7 @@
 				</h3>
 
 				<a href="{% url 'story-view' slug=story.story.slug id=story.story.id %}" class="btn btn-default btn-sm">
-					<img class="img-circle" height="21" width="21" src="{{ user.avatar }}?s=21"/>&nbsp;&nbsp;By {{ story.story.author.first_name }} {{ story.story.author.last_name }} on {{ story.story.date_created }}
+					<img class="img-circle" height="21" width="21" src="{{ story.story.author.avatar }}?s=21"/>&nbsp;&nbsp;By {{ story.story.author.first_name }} {{ story.story.author.last_name }} on {{ story.story.date_created }}
 				</a>
 			</div>
 		</article>

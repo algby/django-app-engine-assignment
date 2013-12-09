@@ -258,6 +258,12 @@ def search(request):
         # Patch in the votes, in a real app this would be done outide the loop to reduce round trips to the datastore
         item['votes'] = StoryVote.get_by_id('StoryVote:%s' % item['id'])
 
+        # Patch in the avatar, again this is sub-optimal and could be implemented in a more efficient way
+        # were this not a prototype. Most likely by including the author email in the search index so that
+        # the gravatar url can be calculated on the fly
+        user = WinaUser.objects.get(id=item['author_id'])
+        item['author_avatar'] = user.get_avatar()
+
         results.append(item)
 
     return render(request, 'frontend/search.html', {
