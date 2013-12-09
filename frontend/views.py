@@ -240,11 +240,16 @@ def search(request):
     # Grab the search term from the url
     query = request.GET.get('query', '')
 
-    # Set the index to use
-    index = gsearch.Index(name='stories-and-media')
+    try:
+        # Set the index to use
+        index = gsearch.Index(name='stories-and-media')
 
-    # Run the search
-    search_results = index.search(query + ' doc_type=story status=published')
+        # Run the search
+        search_results = index.search(query + ' doc_type=story status=published')
+
+    # If something went wrong just return 0 results
+    except:
+        search_results = []
 
     # Set up the result dict for the template
     results = []
