@@ -174,16 +174,16 @@ class Media(models.Model):
             ]
         )
 
-        # Store it in our stories-and-media index
-        index = search.Index(name='stories-and-media')
+        # Store it in our stories-and-media-index index
+        index = search.Index(name='stories-and-media-index')
         index.put(document)
 
     # Override the delete method so we can remove docs from the search index
     def delete(self, *args, **kwargs):
         super(Media, self).delete(*args, **kwargs)
 
-        # Delete the entry from the stories-and-media index
-        index = search.Index(name='stories-and-media')
+        # Delete the entry from the stories-and-media-index index
+        index = search.Index(name='stories-and-media-index')
         index.delete('media:%s' % self.id)
 
 # Used to convert the media model to a form in the cms
@@ -316,8 +316,8 @@ class Story(models.Model):
             ]
         )
 
-        # Store it in our stories-and-media index
-        index = search.Index(name='stories-and-media')
+        # Store it in our stories-and-media-index index
+        index = search.Index(name='stories-and-media-index')
         index.put(document)
 
     # Override the delete method so we can remove docs from the search index
@@ -326,8 +326,8 @@ class Story(models.Model):
 
         super(Story, self).delete(*args, **kwargs)
 
-        # Delete the entry from the stories-and-media index
-        index = search.Index(name='stories-and-media')
+        # Delete the entry from the stories-and-media-index index
+        index = search.Index(name='stories-and-media-index')
         index.delete('story:%s' % id)
 
 # Used to convert the Story model to a form in the cms

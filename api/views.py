@@ -165,7 +165,7 @@ def search(request):
     # Was a query passed?
     if query:
         # Set the index to use
-        index = gsearch.Index(name='stories-and-media')
+        index = gsearch.Index(name='stories-and-media-index')
 
         # Append a type filter if it was specified
         if doc_type:
