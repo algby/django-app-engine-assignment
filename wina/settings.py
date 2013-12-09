@@ -2,7 +2,7 @@ import os
 
 # Django settings for wina project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # Database configs, only one of those will be chosen based on the env
