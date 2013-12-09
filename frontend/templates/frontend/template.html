@@ -40,13 +40,19 @@
 	</header>
 	{% endblock %}
 
-	<!-- Display any general messages if there are any -->
+	{# Display any general messages if there are any #}
 	{% if messages %}
 		{% for message in messages %}
 			<div class="alert alert-{{ message.tags }}" style="margin: auto;">
 				<div class="container">{{ message }}</div>
 			</div>
 		{% endfor %}
+	{% endif %}
+
+	{% if request.GET.next %}
+		<div class="alert alert-danger" style="margin: auto;">
+			<div class="container">You either need to be logged in to see that or you do not have sufficient permissions!</div>
+		</div>
 	{% endif %}
 
 	<div class="container">
