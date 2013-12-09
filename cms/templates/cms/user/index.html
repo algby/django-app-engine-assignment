@@ -42,7 +42,7 @@
 						{{ user.email }}
 					</td>
 					<td>
-						{% for group in user.groups.all %}{{ group }}, {% endfor %}
+						{% for group in user.groups.all %}<span class="label label-primary">{{ group }}</span>&nbsp;{% endfor %}
 					</td>
 					<td>
 						{{ user.date_joined }}
