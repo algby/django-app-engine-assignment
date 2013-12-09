@@ -61,7 +61,7 @@ def user_add_or_edit(request, id=False):
 
             # Check the has valid permissions to edit this user
             if current_user.has_perm('auth.wina_edit_any_user') or (current_user.id == user.id and current_user.has_perm('auth.wina_edit_own_user')):
-                user_form = CmsUserForm(request.POST, instance=user)
+                user_form = CmsUserForm(request.POST, instance=user, user=current_user)
 
             else:
                 raise PermissionDenied
@@ -71,7 +71,7 @@ def user_add_or_edit(request, id=False):
         else:
             # Check the user has valid permissions to add user
             if current_user.has_perm('auth.wina_add_user'):
-                user_form = CmsUserForm(request.POST)
+                user_form = CmsUserForm(request.POST, user=current_user)
 
             else:
                 raise PermissionDenied
@@ -106,7 +106,7 @@ def user_add_or_edit(request, id=False):
 
         # Check the user has valid permissions to edit this user
         if current_user.has_perm('auth.wina_edit_any_user') or (current_user.id == user.id and current_user.has_perm('auth.wina_edit_own_user')):
-            user_form = user_form if request.method == 'POST' else CmsUserForm(instance=user)
+            user_form = user_form if request.method == 'POST' else CmsUserForm(instance=user, user=current_user)
             template_data = {'form': user_form, 'title': user.first_name + ' ' + user.last_name}
 
         else:
@@ -116,7 +116,7 @@ def user_add_or_edit(request, id=False):
     else:
         # Check the user has valid permissions to add a user
         if current_user.has_perm('auth.wina_add_user'):
-            user_form = user_form if request.method == 'POST' else CmsUserForm()
+            user_form = user_form if request.method == 'POST' else CmsUserForm(user=current_user)
             template_data = {'form': user_form, 'title': 'Add User'}
 
         else:

@@ -59,6 +59,16 @@ class CmsUserForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(CmsUserForm, self).__init__(*args, **kwargs)
+
+        # If the user is not an admin don't let them change their own perms/level
+        if not self.user.is_superuser:
+            del self.fields['groups']
+            del self.fields['is_superuser']
+            del self.fields['is_staff']
+
     class Meta:
         model = WinaUser
         # There's more fields we want to exclude than include so just list the ones we want
@@ -322,6 +332,14 @@ class Story(models.Model):
 
 # Used to convert the Story model to a form in the cms
 class StoryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(StoryForm, self).__init__(*args, **kwargs)
+
+        # If the user is not an Editor don't let them set the status field
+        if len(self.user.groups.filter(name='Editor')) == 0:
+            del self.fields['status']
+
     class Meta:
         model = Story
         # Don't show the date created field because we want that to be set automatically

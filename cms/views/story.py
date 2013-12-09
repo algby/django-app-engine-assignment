@@ -60,7 +60,7 @@ def story_add_or_edit(request, id=False):
             # Check the user has valid permissions to edit this story
             if user.has_perm('api.wina_edit_any_story') or (story.author.id == user.id and user.has_perm('api.wina_edit_own_story')):
                 # Get an instance of the StormForm
-                story_form = StoryForm(request.POST, instance=story)
+                story_form = StoryForm(request.POST, instance=story, user=user)
 
             else:
                 raise PermissionDenied
@@ -70,7 +70,7 @@ def story_add_or_edit(request, id=False):
         else:
             # Check the user has valid permissions to add a story
             if user.has_perm('api.wina_add_story'):
-                story_form = StoryForm(request.POST)
+                story_form = StoryForm(request.POST, user=user)
 
             else:
                 raise PermissionDenied
@@ -96,7 +96,7 @@ def story_add_or_edit(request, id=False):
 
         # Check the user has valid permissions to edit this story
         if user.has_perm('api.wina_edit_any_story') or (story.author.id == user.id and user.has_perm('api.wina_edit_own_story')):
-            story_form = story_form if request.method == 'POST' else StoryForm(instance=story)
+            story_form = story_form if request.method == 'POST' else StoryForm(instance=story, user=user)
             template_data = {'form': story_form, 'title': story.title}
 
         else:
@@ -106,7 +106,7 @@ def story_add_or_edit(request, id=False):
     else:
         # Check the user has valid permissions to add a story
         if user.has_perm('api.wina_add_story'):
-            story_form = story_form if request.method == 'POST' else StoryForm()
+            story_form = story_form if request.method == 'POST' else StoryForm(user=user)
             template_data = {'form': story_form, 'title': 'Add Story'}
 
         else:
