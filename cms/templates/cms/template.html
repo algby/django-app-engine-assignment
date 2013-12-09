@@ -20,7 +20,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="{% url 'cms-home' %}">WINA</a>
+				<a class="navbar-brand" href="{% url 'index' %}">Wessex International News Agency</a>
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
@@ -39,7 +39,7 @@
 	</div>
 	{% endblock %}
 
-	<!-- Display any general messages if there are any -->
+	{# Display any general messages if there are any #}
 	{% if messages %}
 		{% for message in messages %}
 			<div class="alert alert-{{ message.tags }}" style="margin: auto;">
@@ -60,7 +60,7 @@
 		{% block content %}{% endblock %}
 	</div>
 
-	<!-- Epic layout hack -->
+	{# Epic layout hack #}
 	<div style="height: 40px;"></div>
 
 	<script src="/static/shared/js/jquery.min.js"></script>

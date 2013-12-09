@@ -19,8 +19,10 @@ STORY_STATUSES = (
     ('published', 'published'),
 )
 
+# The model for users of the site
 class WinaUser(User):
     class Meta:
+        # Proxy django's user model so we can add our own permissions
         proxy = True
         permissions = (
             ('wina_add_user', 'Allowed to add Users'),
@@ -32,7 +34,10 @@ class WinaUser(User):
 
 # Used to convert the User model to a form in the cms
 class CmsUserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = WinaUser
@@ -43,9 +48,8 @@ class CmsUserForm(forms.ModelForm):
     def save(self, commit=True):
         user_form = super(CmsUserForm, self).save(commit=False)
 
-        # Update the users password if it was set, this automatically hashes it
-        if user_form.password != u'':
-            user_form.set_password(user_form.password)
+        # Hash the users password
+        user_form.set_password(user_form.password)
 
         if commit:
             user_form.save()
@@ -54,7 +58,10 @@ class CmsUserForm(forms.ModelForm):
 
 # Used to convert the User model to a form on the frontend
 class FrontEndUserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = WinaUser
@@ -65,17 +72,18 @@ class FrontEndUserForm(forms.ModelForm):
     def save(self, commit=True):
         user_form = super(FrontEndUserForm, self).save(commit=False)
 
-        # Update the users password if it was set, this automatically hashes it
-        if user_form.password != u'':
-            user_form.set_password(user_form.password)
+        # Hash the users password
+        user_form.set_password(user_form.password)
 
         if commit:
             user_form.save()
 
         return user_form
 
+# The model for permission groups
 class WinaGroup(Group):
     class Meta:
+        # Proxy django's group model so we can add our own permissions
         proxy = True
         permissions = (
             ('wina_add_group', 'Allowed to add a Group'),
