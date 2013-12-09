@@ -24,6 +24,7 @@
 
 			<p class="navbar-text navbar-right">
 				{% if user.is_authenticated %}
+					<img class="img-rounded" height="22" width="22" src="{{ user.avatar }}?s=22"/>&nbsp;
 					{{ user.first_name }} {{ user.last_name }} | <a href="{% url 'logout' %}">Log Out</a>
 				{% else %}
 					<a href="{% url 'login' %}" title="Log In">Log In</a> or <a href="{% url 'join' %}" title="Join">Join</a>

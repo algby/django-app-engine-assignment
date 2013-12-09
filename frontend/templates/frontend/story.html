@@ -10,8 +10,13 @@
 				<div data-type="down" class="downvote step fi-arrow-down size-24"></div>
 			</div>
 			<div class="pull-left">
-				<h3><a href="{% url 'story-view' slug=story.slug id=story.id %}" title="{{ story.title }}">{{ story.title }}</a></h3>
-				<span class="label label-wina">By {{ story.author.first_name }} {{ story.author.last_name }} on {{ story.date_created }}</span>
+				<h3>
+					<a href="{% url 'story-view' slug=story.slug id=story.id %}" title="{{ story.title }}">{{ story.title }}</a>
+				</h3>
+
+				<a href="{% url 'story-view' slug=story.slug id=story.id %}" class="btn btn-default btn-sm">
+					<img class="img-circle" height="21" width="21" src="{{ user.avatar }}?s=21"/>&nbsp;&nbsp;By {{ story.author.first_name }} {{ story.author.last_name }} on {{ story.date_created }}
+				</a>
 			</div>
 		</header>
 		<hr/>

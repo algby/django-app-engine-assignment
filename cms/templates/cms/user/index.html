@@ -30,6 +30,7 @@
 						{{ user.id }}
 					</td>
 					<td>
+						<img class="img-rounded" height="34" width="34" src="{{ user.get_avatar }}?s=34"/>&nbsp;
 						<a href="{% url 'user-view' id=user.id %}">{{ user.username }}</a>
 					</td>
 					<td>

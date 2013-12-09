@@ -1,19 +1,19 @@
 {% extends 'cms/template.html' %}
 
 {% block content %}
-		
+
 <table class="table table-bordered">
 	<tr>
 		<td>ID</td>
 		<td>{{ user.id }}</td>
 	</tr>
 	<tr>
-		<td>Username</td>
-		<td>{{ user.username }}</td>
+		<td>Gravatar</td>
+		<td><img class="img-thumbnail" height="100" width="100" src="{{ user.avatar }}?s=100"/></td>
 	</tr>
 	<tr>
-		<td>Groups</td>
-		<td>{% for group in user.groups.all %}{{ group }} {% endfor %}</td>
+		<td>Username</td>
+		<td>{{ user.username }}</td>
 	</tr>
 	<tr>
 		<td>First Name</td>
@@ -26,6 +26,10 @@
 	<tr>
 		<td>Email</td>
 		<td>{{ user.email }}</td>
+	</tr>
+	<tr>
+		<td>Groups</td>
+		<td>{% for group in user.groups.all %}<span class="label label-primary">{{ group }}</span>&nbsp;{% endfor %}</td>
 	</tr>
 	<tr>
 		<td>Date Joined</td>

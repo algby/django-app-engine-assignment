@@ -6,6 +6,8 @@ from django.template.defaultfilters import slugify
 from google.appengine.api import search
 from datetime import datetime
 from google.appengine.ext import ndb
+import urllib
+import hashlib
 
 MEDIA_TYPES = (
     ('audio', 'audio'),
@@ -21,6 +23,14 @@ STORY_STATUSES = (
 
 # The model for users of the site
 class WinaUser(User):
+    # Patch on the user.avatar property for user in templates
+    def __getattr__(self, name):
+        if name == 'avatar':
+            return self.get_avatar()
+
+        else:
+            raise AttributeError
+
     class Meta:
         # Proxy django's user model so we can add our own permissions
         proxy = True
@@ -31,6 +41,16 @@ class WinaUser(User):
             ('wina_deactivate_any_user', 'Allowed to deactivate any User'),
             ('wina_activate_any_user', 'Allowed to activate any User'),
         )
+
+    # Get the users gravatar, code adapted from http://en.gravatar.com/site/implement/images/python/
+    def get_avatar(self, size=None):
+        gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(self.email.lower()).hexdigest()
+
+        # Append the size if it was set
+        if size:
+            gravatar_url += '?' + urllib.urlencode({'s': str(size)})
+
+        return gravatar_url
 
 # Used to convert the User model to a form in the cms
 class CmsUserForm(forms.ModelForm):

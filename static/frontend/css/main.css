@@ -35,6 +35,10 @@ hr {
 	margin-right: 20px;
 }
 
+.votes {
+	padding: 6px 0;
+}
+
 .fi-arrow-up {
 	color: #548854;
 }
