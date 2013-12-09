@@ -203,7 +203,6 @@ def logout(request):
     # Redirect them to the home page
     return redirect('/')
 
-@login_required
 def submit(request):
     # Is it a POST request, i.e is the form being submitted
     if request.method == 'POST':
