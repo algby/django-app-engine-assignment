@@ -337,7 +337,7 @@ class StoryForm(forms.ModelForm):
         super(StoryForm, self).__init__(*args, **kwargs)
 
         # If the user is not an Editor don't let them set the status field
-        if len(self.user.groups.filter(name='Editor')) == 0:
+        if len(self.user.groups.filter(name='Editor')) != 1 and not self.user.is_superuser:
             del self.fields['status']
 
     class Meta:
