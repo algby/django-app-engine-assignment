@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from google.appengine.api import search as gsearch
 from modules.django_gcs_get_serving_url import get_serving_url
-from api.models import Media, MediaForm, WinaUser
+from api.models import Story, StoryForm, Media, MediaForm, WinaUser
 import json
 
 def index(request):
@@ -32,6 +32,10 @@ def __authenticate_user(request):
 def __formatMediaOrStory(object, type='db_object'):
     # Append the doc type for db objects as it isn't stored natively
     if type == 'db_object':
+        # Patch the story object to include the type attr
+        if isinstance(object, Story):
+            object.type = 'story'
+
         object.doc_type = 'media' if object.type in ['image', 'audio', 'video'] else 'story'
 
     return {
@@ -59,6 +63,7 @@ def media(request):
         'data': [],
     }
 
+    # Is media being uploaded?
     if request.method == 'POST':
         try:
             # Authenticate the api user
@@ -104,6 +109,24 @@ def media(request):
     # Return the response as json
     return HttpResponse(json.dumps(response), mimetype='application/json')
 
+# Return all stories as json
+def story(request):
+    # Set up a dict to return
+    response = {
+        'error': None,
+        'data': [],
+    }
+
+    # Get all the story objects
+    story = Story.objects.filter(status='published')
+
+    # Append all the story objects to the response object
+    for object in story:
+        response['data'].append(__formatMediaOrStory(object))
+
+    # Return the response as json
+    return HttpResponse(json.dumps(response), mimetype='application/json')
+
 # Look up an individual piece of media
 def media_lookup(request, id):
     # Get the media object
@@ -113,6 +136,20 @@ def media_lookup(request, id):
     response = {
         'error': None,
         'data': [__formatMediaOrStory(media)],
+    }
+
+    # Return the response as json
+    return HttpResponse(json.dumps(response), mimetype='application/json')
+
+# Look up an individual story
+def story_lookup(request, id):
+    # Get the story object, only allow retrieval of published stories as this is a public api
+    story = Story.objects.get(id=id, status='published')
+
+    # Set up a dict to return
+    response = {
+        'error': None,
+        'data': [__formatMediaOrStory(story)],
     }
 
     # Return the response as json
