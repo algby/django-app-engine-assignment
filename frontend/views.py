@@ -44,8 +44,8 @@ def story_view(request, slug, id):
     })
 
 def index(request):
-    # Get the top 10 stories with the highest vote count
-    story_votes = StoryVote.query(StoryVote.status == 'published').order(-StoryVote.total).fetch(10)
+    # Get the top 10 stories with the highest vote count with at least 1 vote
+    story_votes = StoryVote.query(StoryVote.status == 'published', StoryVote.total >= 1).order(-StoryVote.total).fetch(10)
 
     # Used to store all the ids needed for the sql query
     ids = []
