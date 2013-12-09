@@ -45,7 +45,7 @@ def story(request):
         'fields': fields,
     })
 
-# Render the add/edit media form or handle saving it
+# Render the add/edit story form or handle saving it
 @user_passes_test(can_access_cms)
 def story_add_or_edit(request, id=False):
     user = request.user
