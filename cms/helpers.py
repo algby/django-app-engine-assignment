@@ -3,4 +3,4 @@
 # instead of just using a lambda to allow for more complex logic here in
 # the future!
 def can_access_cms(user):
-    return user.is_staff
+    return user.is_staff or user.is_superuser
