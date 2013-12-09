@@ -4,6 +4,9 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
+# How long should we instruct the browser to cache static files?
+default_expiration: '1d'
+
 # These are checked in order, so it tries to match static first then falls back to Django
 handlers:
 - url: /static
