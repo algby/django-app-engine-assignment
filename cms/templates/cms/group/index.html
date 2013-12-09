@@ -34,7 +34,7 @@
 					<td>
 						<a href="{% url 'group-view' id=group.id %}" type="button" class="btn btn-info">View</a>
 						<a href="{% url 'group-edit' id=group.id %}" type="button" class="btn btn-warning">Edit</a>
-						<a href="#" type="button" class="btn btn-danger">Delete</a>
+						<a href="{% url 'group-delete' id=group.id %}" type="button" class="btn btn-danger">Delete</a>
 					</td>
 				</tr>
 				{% endfor %}

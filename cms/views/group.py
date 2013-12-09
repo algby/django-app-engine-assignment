@@ -113,3 +113,25 @@ def group_view(request, id):
     group = WinaGroup.objects.get(id=id)
 
     return render(request, 'cms/group/view.html', {'group': group, 'title': group.name})
+
+# Handles deleting a group
+@user_passes_test(can_access_cms)
+def group_delete(request, id):
+    user = request.user
+
+    # Look up the group object
+    group = WinaGroup.objects.get(id=id)
+
+    # Check the user has valid permissions to delete this group
+    if user.has_perm('api.wina_delete_group'):
+        # Delete it from the database
+        group.delete()
+
+        # Show a success message to the user
+        messages.success(request, 'Group succesfully deleted!')
+
+        # Redirect them back to the group home page
+        return redirect('group-home')
+
+    else:
+        raise PermissionDenied

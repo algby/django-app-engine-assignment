@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^/group/view/(?P<id>\d+)$', views.group_view, name='group-view'),
     url(r'^/group/add$', views.group_add_or_edit, name='group-add'),
     url(r'^/group/edit/(?P<id>\d+)$', views.group_add_or_edit, name='group-edit'),
+    url(r'^/group/delete/(?P<id>\d+)$', views.group_delete, name='group-delete'),
 
     # Catch all route
     url(r'^$', views.index, name='cms-home')
