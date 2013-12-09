@@ -242,7 +242,7 @@ def search(request):
 
     try:
         # Set the index to use
-        index = gsearch.Index(name='stories-and-media-index')
+        index = gsearch.Index(name='stories-and-media-index2')
 
         # Run the search
         search_results = index.search(query + ' doc_type=story status=published')
