@@ -1,0 +1,29 @@
+{% extends 'frontend/template.html' %}
+
+{% block content %}
+
+	<h1>{{ title }}</h1>
+	<hr/>
+	{% for result in results %}
+
+		<article class="frontend-story clearfix" data-story-id="{{ result.id }}">
+			<div class="pull-left frontend-arrows">
+				<div data-type="up" class="upvote step fi-arrow-up size-24"></div>
+				<div class="votes" id="{{ result.id }}-votes">{{ result.votes.total }}</div>
+				<div data-type="down" class="downvote step fi-arrow-down size-24"></div>
+			</div>
+			<div class="pull-left">
+				<h3>
+					<a href="{% url 'story-view' slug=result.slug id=result.id %}" title="{{ result.title }}">{{ result.title }}</a>
+				</h3>
+
+				<a href="{% url 'story-view' slug=result.slug id=result.id %}" class="btn btn-default btn-sm">
+					<img class="img-circle" height="21" width="21" src="{{ user.avatar }}?s=21"/>&nbsp;&nbsp;By {{ result.author_first_name }} {{ result.author_last_name }} on {{ result.date_created }}
+				</a>
+			</div>
+		</article>
+		<hr/>
+
+	{% endfor %}
+
+{% endblock content %}
