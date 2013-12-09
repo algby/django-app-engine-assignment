@@ -8,6 +8,7 @@ from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 from api.models import Story, StoryVote, FrontEndUserForm, MediaForm, WinaUser
 from modules.django_gcs_get_serving_url import get_serving_url
+from google.appengine.api import search as gsearch
 import json
 
 def blob_view(request, blob_key):
@@ -232,4 +233,35 @@ def submit(request):
         'title': 'Media Submission',
         'form': form,
         'submit': 'Submit',
+    })
+
+def search(request):
+    # Grab the search term from the url
+    query = request.GET.get('query', '')
+
+    # Set the index to use
+    index = gsearch.Index(name='stories-and-media')
+
+    # Run the search
+    search_results = index.search(query + ' doc_type=story status=published')
+
+    # Set up the result dict for the template
+    results = []
+
+    # Populate the result dict
+    for search_item in search_results:
+        item = {'id': int(search_item.doc_id.split(':')[1])}
+
+        for field in search_item.fields:
+            item[field.name] = field.value
+
+        # Patch in the votes, in a real app this would be done outide the loop to reduce round trips to the datastore
+        item['votes'] = StoryVote.get_by_id('StoryVote:%s' % item['id'])
+
+        results.append(item)
+
+    return render(request, 'frontend/search.html', {
+        'title': 'Search for "%s"' % query,
+        'query': query,
+        'results': results,
     })
