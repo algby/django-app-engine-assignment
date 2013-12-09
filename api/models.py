@@ -72,7 +72,7 @@ class CmsUserForm(forms.ModelForm):
     class Meta:
         model = WinaUser
         # There's more fields we want to exclude than include so just list the ones we want
-        fields = ['username', 'first_name', 'last_name', 'email', 'groups', 'is_staff', 'is_superuser', 'is_active']
+        fields = ['username', 'password', 'first_name', 'last_name', 'email', 'groups', 'is_staff', 'is_superuser', 'is_active']
 
     # Override the save method to add our custom fields in correctly
     def save(self, commit=True):
