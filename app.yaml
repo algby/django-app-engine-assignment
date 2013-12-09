@@ -17,8 +17,13 @@ handlers:
   # Force https for added security, particuarly important for the API
   secure: always
 
+# Required libraries
 libraries:
 - name: django
   version: '1.5'
 - name: MySQLdb
-  version: "latest"
+  version: 'latest'
+
+# Files not to deploy
+skip_files:
+- ^(appengine_data/.*)
