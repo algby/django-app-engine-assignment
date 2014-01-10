@@ -1,10 +1,9 @@
 Django on App Engine and the Google Cloud
-==========================================
-
+-----------------------------------------
 One of the assignments I completed in the final year of my computing course at university. It's far from perfect but it's a decent example of running Django on App Engine and integrating with various Google Cloud Services.
 
 About / Features
-========
+----------------
 
 - Django
 - Designed to run on Google App Engine
@@ -25,13 +24,13 @@ About / Features
   - Sorting stories/media in the admin panel
 
 Why
-===
+-----
 
 1. Because
 2. Hopefully this might be useful to someone else, getting Django to do what you want on App Engine is tricky at times.
 
 Screenshots
-===========
+------------
 
 The app isn't live anymore so if you can't be bothered to run it locally here are some images of what it looks like..
 
