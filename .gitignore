@@ -82,3 +82,4 @@ gcs/*
 
 # Ignore dev appengine data
 appengine_data
+UML Models
