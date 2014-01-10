@@ -75,11 +75,15 @@ nosetests.xml
 *.pot
 *.pyc
 local_settings.py
-brief.pdf
 
 # GCS Demo stuff
 gcs/*
 
+# Assignment brief
+brief.pdf
+
 # Ignore dev appengine data
 appengine_data
+
+# Models
 UML Models
