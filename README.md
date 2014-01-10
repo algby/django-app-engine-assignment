@@ -1,4 +1,4 @@
-Advanced Development Assignment
+Django on App Engine and the Google Cloud
 ==========================================
 
 One of the assignments I completed in the final year of my computing course at university. It's far from perfect but it's a decent example of running Django on App Engine and integrating with various Google Cloud Services.
