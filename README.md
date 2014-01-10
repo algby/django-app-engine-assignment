@@ -33,4 +33,18 @@ Why
 Screenshots
 ===========
 
-The app isn't live anymore so if you can't be bothered to run it locally there are some screenshots in the screenshots directory.
+The app isn't live anymore so if you can't be bothered to run it locally here are some images of what it looks like..
+
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/home_page.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_story.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_search.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_media_submission.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_media_submission2.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_story_with_video.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_media.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_story.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_story_add.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_story_add_media.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_story_editor_with_image.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_users.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_user_edit.png?raw=true)
