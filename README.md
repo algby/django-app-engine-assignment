@@ -39,7 +39,7 @@ The app isn't live anymore so if you can't be bothered to run it locally here ar
 ![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_story.png?raw=true)
 ![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_search.png?raw=true)
 ![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_media_submission.png?raw=true)
-![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_media_submission2.png?raw=true)
+![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_media_submission_2.png?raw=true)
 ![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/frontend_story_with_video.png?raw=true)
 ![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_media.png?raw=true)
 ![](https://github.com/jamesrwhite/wina-assignment/blob/master/screenshots/cms_story.png?raw=true)
